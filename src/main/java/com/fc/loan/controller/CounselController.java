@@ -19,4 +19,9 @@ public class CounselController extends AbstractController{
     public ResponseDTO<Response> create(@RequestBody Request request) {
         return ok(counselService.create(request)); // AbstractController에 정의된 ok 메소드 호출
     }
+
+    @GetMapping("/{counselId}")
+    public ResponseDTO<Response> get(@PathVariable Long counselId) {
+        return ok(counselService.get(counselId));
+    }
 }
