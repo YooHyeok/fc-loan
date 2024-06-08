@@ -70,4 +70,37 @@ class CounselServiceTest {
         Assertions.assertThat(actual.getName()).isSameAs(entity.getName()); // 메모리상 같은 객체를 가리키는지 주소 비교
     }
 
+    @Test
+    @DisplayName("대출 상담에 대한 아이디가 존재할 때 존재하는 상담 엔티티를 조회하여 반환받아야 한다.")
+    void Should_ReturnResponseOfExistCounselEntity_When_RequestExistCounselId() throws Exception {
+        //given
+        Long findId = 1L;
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .build();
+
+        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        Mockito.when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+        //when
+        Response actual = counselService.get(1L);
+
+        //then
+        Assertions.assertThat(actual.getCounselId()).isSameAs(findId);
+
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상담 ID로 조회시 Exception Throw 해야 한다.")
+    void Should_ThrowException_When_RequestNotExistCounselId() throws Exception {
+        //given
+        Long findId = 2L;
+
+        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        Mockito.when(counselRepository.findById(findId)).thenThrow(new BaseException(ResultType.SYSTEM_ERROR));
+
+        //when & then
+        org.junit.jupiter.api.Assertions.assertThrows(BaseException.class, () -> counselService.get(findId));
+
+    }
 }
