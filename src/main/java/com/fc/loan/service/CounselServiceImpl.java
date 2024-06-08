@@ -2,6 +2,8 @@ package com.fc.loan.service;
 
 import com.fc.loan.domain.Counsel;
 import com.fc.loan.dto.CounselDTO;
+import com.fc.loan.exception.BaseException;
+import com.fc.loan.exception.ResultType;
 import com.fc.loan.repository.CounselRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,5 +28,13 @@ public class CounselServiceImpl implements CounselService {
         counsel.setAppliedAt(LocalDateTime.now());
         log.info("mapped Counsel Data : {}", counsel);
         return modelMapper.map(counselRepository.save(counsel), Response.class);
+    }
+
+    @Override
+    public Response get(Long counselId) {
+        Counsel counsel = counselRepository.findById(counselId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        return modelMapper.map(counsel, Response.class);
     }
 }
