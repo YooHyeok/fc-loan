@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate // 변경감지를 통해 변경된 컬럼만 Update되도록 설정 (SQL문에 출력됨)
-@SQLDelete(sql = "UPDATE counsel SET deleted_at = NOW() where counsel_id = ?")
+//@SQLDelete(sql = "UPDATE counsel SET updated_at = NOW(), is_deleted = true WHERE counsel_id = ?")
 @Where(clause = "is_deleted=false") // SELECT 조회시 is_deleted가 false인 경우만 조회되도록 WHERE절 설정
 public class Counsel extends BaseEntity {
     @Id
