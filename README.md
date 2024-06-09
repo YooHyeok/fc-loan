@@ -229,12 +229,12 @@ IT산업은 우리 삶에서 뗄래야 뗄 수 없는 이미 삶 자체가 되�
 
 # 대출 상담 등록 기능 구현
 
-### URL
+### URL(POST)
 ```text
 https://localhost:8080/counsels
 ```
 
-### Request
+### Request - CounselDTO.Request
 ```json
 {
   "name": "김아무",
@@ -247,7 +247,7 @@ https://localhost:8080/counsels
 }
 ```
 
-### Response
+### Response - CounselDTO.Response
 ```json
 {
   "result": {
@@ -261,7 +261,8 @@ https://localhost:8080/counsels
   "memo": "대출 상담을 원합니다 .",
   "address": "서울 어딘구 여기동",
   "addressDetail": "123-45",
-  "aplliedAt": "2024-06-07T00:20:44.500463",
+  "zipCode": "11122",
+  "appliedAt": "2024-06-07T00:20:44.500463",
   "createdAt": "2024-06-07T00:20:44.533554",
   "updatedAt": "2024-06-07T00:20:44.533554"
 }
@@ -269,12 +270,17 @@ https://localhost:8080/counsels
 
 # 대출 상담 조회 기능 구현
 
-### URL
+### URL(GET)
 ```text
 https://localhost:8080/counsels/{counselId}
 ```
 
-### Response
+### PathVariable - counselId
+```text
+Long : 1
+```
+
+### Response - CounselDTO.Response
 ```json
 {
   "result": {
@@ -288,7 +294,54 @@ https://localhost:8080/counsels/{counselId}
   "memo": "대출 상담을 원합니다 .",
   "address": "서울 어딘구 여기동",
   "addressDetail": "123-45",
-  "aplliedAt": "2024-06-07T00:20:44.500463",
+  "zipCode": "11122",
+  "appliedAt": "2024-06-07T00:20:44.500463",
+  "createdAt": "2024-06-07T00:20:44.533554",
+  "updatedAt": "2024-06-07T00:20:44.533554"
+}
+```
+
+# 대출 상담 수정 기능 구현
+
+### URL(PUT)
+```text
+https://localhost:8080/counsels/{counselId}
+```
+
+### PathVariable - counselId
+```text
+Long : 1
+```
+
+### Request - CounselDTO.Request
+```json
+{
+  "name": "박아무",
+  "cellPhone": "010-3333-4444",
+  "email": "yoohyeok@school.com",
+  "memo": "대출 상담을 원합니다 . 2(메모 수정)",
+  "address": "서울 어딘가구 여기동",
+  "addressDetail": "923-45",
+  "zipCode": "33322"
+}
+```
+
+### Response - CounselDTO.Response
+```json
+{
+  "result": {
+      "code": "0000",
+      "desc": "success"
+  },
+  "counselId": 1,
+  "name": "박아무",
+  "cellPhone": "010-3333-4444",
+  "email": "yoohyeok@school.com",
+  "memo": "대출 상담을 원합니다 . 2(메모 수정)",
+  "address": "서울 어딘가구 여기동",
+  "addressDetail": "923-45",
+  "zipCode": "33322",
+  "appliedAt": "2024-06-07T00:20:44.500463",
   "createdAt": "2024-06-07T00:20:44.533554",
   "updatedAt": "2024-06-07T00:20:44.533554"
 }
