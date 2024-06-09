@@ -79,7 +79,7 @@ class CounselServiceTest {
                 .counselId(1L)
                 .build();
 
-        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        //mocking - 특정 값이 들어왔을 때 Null을 허용한 Optional Counsel을 반환하도록 모킹
         Mockito.when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
 
         //when
@@ -96,11 +96,40 @@ class CounselServiceTest {
         //given
         Long findId = 2L;
 
-        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        //mocking - 특정 값이 들어왔을 때 Null을 허용한 Optional Counsel을 반환하도록 모킹
         Mockito.when(counselRepository.findById(findId)).thenThrow(new BaseException(ResultType.SYSTEM_ERROR));
 
         //when & then
         org.junit.jupiter.api.Assertions.assertThrows(BaseException.class, () -> counselService.get(findId));
 
+    }
+
+    @Test
+    @DisplayName("정보가 존재하는 상담에 대한 수정 요청이 왔을 때 수정된 존재하는 상담 엔티티를 반환해야 한다.")
+    void Should_ReturnUpdatedResponseOfExistCounselEntity_When_RequestUpdateExistCounselInfo() throws Exception {
+        //given
+        Long findId = 1L;
+
+        /* 변경 완료 후 반환된 Entity */
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .name("Member Kim")
+                .build();
+
+        /* 변경할 요청 객체 */
+        Request request = Request.builder()
+                .name("Member Kang")
+                .build();
+        //mocking - 특정 값이 들어왔을 때 Null을 허용한 Optional Counsel을 반환하도록 모킹
+        Mockito.when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        Mockito.when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
+
+        //when
+        Response actual = counselService.update(findId, request);
+
+        //then
+        Assertions.assertThat(actual.getCounselId()).isSameAs(findId);
+        Assertions.assertThat(actual.getName()).isSameAs(request.getName());
     }
 }
