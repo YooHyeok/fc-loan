@@ -132,4 +132,28 @@ class CounselServiceTest {
         Assertions.assertThat(actual.getCounselId()).isSameAs(findId);
         Assertions.assertThat(actual.getName()).isSameAs(request.getName());
     }
+
+    @Test
+    @DisplayName("정보가 존재하는 상담에 대한 삭제 요청이 왔을 때 상담 엔티티를 삭제한다.")
+    void Should_DeletedCounselEntity_When_RequestDeleteExistCounselInfo() throws Exception {
+        //given
+        Long targetId = 1L;
+
+        /* 삭제(변경) 완료 후 반환된 Entity */
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .build();
+
+        //mocking - 특정 값이 들어왔을 때 Null을 허용한 Optional Counsel을 반환하도록 모킹
+        Mockito.when(counselRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        Mockito.when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
+
+        //when
+        counselService.delete(targetId);
+
+        //then
+        Assertions.assertThat(entity.getIsDeleted()).isSameAs(true);
+
+    }
 }
