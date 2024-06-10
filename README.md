@@ -180,14 +180,14 @@ IT산업은 우리 삶에서 뗄래야 뗄 수 없는 이미 삶 자체가 되�
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '생성일자',
     is_deleted BIT DEFAULT FALSE NOT NULL COMMENT '이용가능여부',
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL COMMENT '수정일자',
-    address VARCHAR(50) DEFAULT NULL COMMENT '',
-    address_detail VARCHAR(50) DEFAULT NULL COMMENT '',
-    applied_at DATETIME DEFAULT NULL COMMENT '',
-    cell_phone VARCHAR(13) DEFAULT NULL COMMENT '',
-    email VARCHAR(50) DEFAULT NULL COMMENT '',
-    memo DEFAULT NULL COMMENT '',
-    name VARCHAR(12) DEFAULT NULL COMMENT '',
-    zip_code VARCHAR(5) DEFAULT NULL COMMENT '',
+    address VARCHAR(50) DEFAULT NULL COMMENT '주소',
+    address_detail VARCHAR(50) DEFAULT NULL COMMENT '상세주소',
+    applied_at DATETIME DEFAULT NULL COMMENT '신청일자',
+    cell_phone VARCHAR(13) DEFAULT NULL COMMENT '전화번호',
+    email VARCHAR(50) DEFAULT NULL COMMENT '상담 요청자 이메일',
+    memo DEFAULT NULL COMMENT '상담 메모',
+    name VARCHAR(12) DEFAULT NULL COMMENT '상담 요청자',
+    zip_code VARCHAR(5) DEFAULT NULL COMMENT '우편번호',
     primary key (counsel_id)
   )
   ```
@@ -208,7 +208,7 @@ IT산업은 우리 삶에서 뗄래야 뗄 수 없는 이미 삶 자체가 되�
       @GeneratedValue(strategy = GenerationType.IDENTITY)
       @Column(nullable = false, updatable = false)
       private Long counselId;
-      @Column(nullable = false, columnDefinition = "DATETIME COMMENT '신청일자'")
+      @Column(nullable = false, columnDefinition = "DATETIME DEFAULT NULL COMMENT '신청일자'")
       private LocalDateTime appliedAt;
       @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '상담 요청자'")
       private String name;
@@ -226,6 +226,8 @@ IT산업은 우리 삶에서 뗄래야 뗄 수 없는 이미 삶 자체가 되�
       private String zipCode;
   }
   ```
+
+
 
 # 대출 상담 등록 기능 구현
 
@@ -344,5 +346,28 @@ Long : 1
   "appliedAt": "2024-06-07T00:20:44.500463",
   "createdAt": "2024-06-07T00:20:44.533554",
   "updatedAt": "2024-06-07T00:20:44.533554"
+}
+```
+
+# 대출 상담 삭제 기능 구현
+
+### URL(DELETE)
+```text
+https://localhost:8080/counsels/{counselId}
+```
+
+### PathVariable - counselId
+```text
+Long : 1
+```
+
+### Response - CounselDTO.Response
+```json
+{
+  "result": {
+      "code": "0000",
+      "desc": "success"
+  },
+  "data" : null
 }
 ```
