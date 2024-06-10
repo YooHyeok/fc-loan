@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -56,5 +57,15 @@ public class CounselServiceImpl implements CounselService {
         counsel.setAddressDetail(request.getAddressDetail());
         counsel.setZipCode(request.getZipCode());
         return modelMapper.map(counselRepository.save(counsel), Response.class);
+    }
+
+    @Override
+    public void delete(Long counselId) {
+        Counsel counsel = counselRepository.findById(counselId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        counsel.setIsDeleted(true);
+        counselRepository.save(counsel);
+//        counselRepository.deleteById(counsel.getCounselId()); // JPA의 @SQLDelete에 의해 SoftDelete 처리된다. 추후 리팩토링 예정
     }
 }
