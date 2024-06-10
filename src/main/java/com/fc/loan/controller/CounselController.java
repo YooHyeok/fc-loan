@@ -29,4 +29,9 @@ public class CounselController extends AbstractController{
     public ResponseDTO<Response> update(@PathVariable Long counselId, @RequestBody Request request) {
         return ok(counselService.update(counselId, request)); // AbstractController에 정의된 ok 메소드 호출
     }
+    @DeleteMapping("/{counselId}")
+    public ResponseDTO<Response> delete(@PathVariable Long counselId) {
+        counselService.delete(counselId);
+        return ok(); // AbstractController에 정의된 ok 메소드 호출 - "data": null
+    }
 }
