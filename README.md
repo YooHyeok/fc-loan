@@ -492,3 +492,33 @@ https://localhost:8080/applications
   "updatedAt": "2024-06-07T00:20:44.533554"
 }
 ```
+
+# *대출 신청 조회 기능 구현*
+
+### URL(GET)
+```text
+https://localhost:8080/applications/{applicationId}
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Response - ApplicationDTO.Response
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "applicationId": 1,
+  "name": "김아무",
+  "cellPhone": "010-1111-2222",
+  "email": "yoohyeok@school.com",
+  "hopeAmount": "50000000",
+  "appliedAt": "2024-06-07T00:20:44.500463",
+  "createdAt": "2024-06-07T00:20:44.533554",
+  "updatedAt": "2024-06-07T00:20:44.533554"
+}
+```
