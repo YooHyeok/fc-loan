@@ -38,4 +38,18 @@ public class ApplicationServiceImpl implements ApplicationService {
         return modelMapper.map(application, Response.class);
     }
 
+    @Override
+    public Response update(Long applicationId, Request request) {
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        application.setName(request.getName());
+        application.setCellPhone(request.getCellPhone());
+        application.setEmail(request.getEmail());
+        application.setHopeAmount(request.getHopeAmount());
+
+        return modelMapper.map(applicationRepository.save(application), Response.class);
+    }
+
 }
