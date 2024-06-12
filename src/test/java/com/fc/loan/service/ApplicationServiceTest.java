@@ -77,4 +77,34 @@ class ApplicationServiceTest {
         //then
         Assertions.assertThat(actual.getApplicationId()).isSameAs(entity.getApplicationId());
     }
+
+    @Test
+    @DisplayName("존재하는 상담 신청 ID로 수정 요청이 왔을 때 존재하는 상담신청 수정된 엔티티를 응답객체로 반환한다.")
+    void Should_ReturnUpdatedResponseOfExistApplicationEntity_When_RequestUpdateExistApplicationInfo() throws Exception {
+        //given
+        Long targetId = 1L;
+        Application entity = Application.builder()
+                .applicationId(targetId)
+                .name("Member Yoo")
+                .hopeAmount(BigDecimal.valueOf(5000000))
+                .build();
+        Request request = Request.builder()
+                .name("Member U")
+                .hopeAmount(BigDecimal.valueOf(4000000))// 4천만원 대출 요청 객체
+                .build();
+
+        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        Mockito.when(applicationRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+        Mockito.when(applicationRepository.save(ArgumentMatchers.any(Application.class))).thenReturn(entity);
+
+        //when - 요청객체를 전달하며 create메소드를 호출하여 내부 save메소드에 대한 mocking when이 적용되고 기대값으로 Response객체를 반환받게 된다.
+        Response actual = applicationService.update(targetId, request);
+
+        //then
+        Assertions.assertThat(actual.getApplicationId()).isSameAs(targetId);
+        Assertions.assertThat(actual.getHopeAmount()).isSameAs(request.getHopeAmount());
+        Assertions.assertThat(actual.getName()).isSameAs(request.getName()); // 메모리상 같은 객체를 가리키는지 주소 비교
+        Assertions.assertThat(actual.getName()).isSameAs(entity.getName()); // Entity는 영속화되어서 수정후 값이 반영된다.
+
+    }
 }
