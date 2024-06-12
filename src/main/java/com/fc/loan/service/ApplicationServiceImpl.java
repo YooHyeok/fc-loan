@@ -1,6 +1,8 @@
 package com.fc.loan.service;
 
 import com.fc.loan.domain.Application;
+import com.fc.loan.exception.BaseException;
+import com.fc.loan.exception.ResultType;
 import com.fc.loan.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setAppliedAt(LocalDateTime.now());
         log.info("mapped Counsel Data : {}", application);
         return modelMapper.map(applicationRepository.save(application), Response.class);
+    }
+
+    @Override
+    public Response get(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        return modelMapper.map(application, Response.class);
     }
 
 }
