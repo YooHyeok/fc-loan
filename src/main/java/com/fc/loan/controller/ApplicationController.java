@@ -20,5 +20,9 @@ public class ApplicationController extends AbstractController{
         return ok(counselService.create(request)); // AbstractController에 정의된 ok 메소드 호출
     }
 
+    @GetMapping("/{applicationId}")
+    public ResponseDTO<Response> create(@PathVariable Long applicationId) {
+        return ok(counselService.get(applicationId)); // AbstractController에 정의된 ok 메소드 호출
+    }
 
 }
