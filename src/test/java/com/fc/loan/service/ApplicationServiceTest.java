@@ -59,4 +59,22 @@ class ApplicationServiceTest {
         Assertions.assertThat(actual.getName()).isSameAs(entity.getName()); // 메모리상 같은 객체를 가리키는지 주소 비교
     }
 
+    @Test
+    @DisplayName("존재하는 상담 신청 ID로 요청이 왔을 때 존재하는 상담신청 엔티티를 응답객체로 반환한다.")
+    void Should_ReturnResponseOfExistApplicationEntity_When_RequestExistApplicationId() throws Exception {
+        //given
+        Long findId = 1L;
+
+        Application entity = Application.builder()
+                .applicationId(1L)
+                .build();
+        //mocking - 특정 값이 들어왔을 때 Counsel을 반환하도록 모킹
+        Mockito.when(applicationRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+        //when
+        Response actual = applicationService.get(findId);
+
+        //then
+        Assertions.assertThat(actual.getApplicationId()).isSameAs(entity.getApplicationId());
+    }
 }
