@@ -1,5 +1,6 @@
 package com.fc.loan.controller;
 
+import com.fc.loan.dto.ApplicationDTO;
 import com.fc.loan.dto.ResponseDTO;
 import com.fc.loan.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class ApplicationController extends AbstractController{
     @GetMapping("/{applicationId}")
     public ResponseDTO<Response> create(@PathVariable Long applicationId) {
         return ok(counselService.get(applicationId)); // AbstractController에 정의된 ok 메소드 호출
+    }
+
+    @PutMapping("/{applicationId}")
+    public ResponseDTO<Response> update(@PathVariable Long applicationId, @RequestBody Request request) {
+        return ok(counselService.update(applicationId, request)); // AbstractController에 정의된 ok 메소드 호출
     }
 
 }
