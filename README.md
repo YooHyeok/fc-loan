@@ -522,3 +522,45 @@ Long : 1
   "updatedAt": "2024-06-07T00:20:44.533554"
 }
 ```
+
+# *대출 상담 수정 기능 구현*
+
+### URL(PUT)
+```text
+https://localhost:8080/applications/{applicationId}
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Request - ApplicationDTO.Request
+```json
+{
+  "name": "수정아무",
+  "cellPhone": "010-3333-4444",
+  "email": "update@success.com",
+  "hopeAmount": "0"
+}
+```
+
+### Response - ApplicationDTO.Response
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": {
+    "applicationId": 1,
+    "name": "수정아무",
+    "cellPhone": "010-3333-4444",
+    "email": "update@success.com",
+    "hopeAmount": 0,
+    "appliedAt": "2024-06-13T00:32:16.39708",
+    "createdAt": "2024-06-13T00:32:16.437887",
+    "updatedAt": "2024-06-14T00:03:46.6237035"
+  }
+}
+```
