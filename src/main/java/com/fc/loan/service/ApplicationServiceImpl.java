@@ -52,4 +52,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         return modelMapper.map(applicationRepository.save(application), Response.class);
     }
 
+    @Override
+    public void delete(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        application.setIsDeleted(true);
+        applicationRepository.save(application);
+//  TODO. JPA의 @SQLDelete에 의해 SoftDelete 처리된다. 추후 리팩토링 예정
+//        applicationRepository.deleteById(application.getApplicationId());
+    }
+
 }
