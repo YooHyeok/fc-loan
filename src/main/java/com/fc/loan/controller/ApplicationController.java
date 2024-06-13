@@ -31,4 +31,10 @@ public class ApplicationController extends AbstractController{
         return ok(counselService.update(applicationId, request)); // AbstractController에 정의된 ok 메소드 호출
     }
 
+    @DeleteMapping("/{applicationId}")
+    public ResponseDTO<Response> delete(@PathVariable Long applicationId) {
+        counselService.delete(applicationId);
+        return ok(); // AbstractController에 정의된 ok 메소드 호출
+    }
+
 }
