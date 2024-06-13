@@ -107,4 +107,25 @@ class ApplicationServiceTest {
         Assertions.assertThat(actual.getName()).isSameAs(entity.getName()); // Entity는 영속화되어서 수정후 값이 반영된다.
 
     }
+    @Test
+    @DisplayName("정보가 존재하는 신청에 대한 삭제 요청이 왔을 때 신청 엔티티를 삭제한다.")
+    void Should_DeletedApplicationEntity_When_RequestDeleteExistApplicationInfo() throws Exception {
+        //given
+        Long targetId = 1L;
+
+        Application entity = Application.builder()
+                .applicationId(1L)
+                .build();
+
+        //Mocking
+        Mockito.when(applicationRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+        Mockito.when(applicationRepository.save(ArgumentMatchers.any(Application.class))).thenReturn(entity);
+
+        //when
+        applicationService.delete(targetId);
+
+        //then
+        Assertions.assertThat(entity.getIsDeleted()).isSameAs(true);
+
+    }
 }
