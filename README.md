@@ -564,3 +564,26 @@ Long : 1
   }
 }
 ```
+
+# *대출 신청 삭제 기능 구현*
+
+### URL(DELETE)
+```text
+https://localhost:8080/applications/{applicationId}
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Response - ApplicationDTO.Response
+```json
+{
+  "result": {
+      "code": "0000",
+      "desc": "success"
+  },
+  "data" : null
+}
+```
