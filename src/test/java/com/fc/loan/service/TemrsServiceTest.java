@@ -11,6 +11,10 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import static com.fc.loan.dto.TermsDTO.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,5 +50,30 @@ public class TemrsServiceTest {
         Assertions.assertThat(actual.getTermsDetailUrl()).isSameAs(request.getTermsDetailUrl());
         Assertions.assertThat(actual.getName()).isSameAs(request.getName());
         Assertions.assertThat(actual.getTermsId()).isSameAs(entity.getTermsId());
+    }
+    @Test
+    @DisplayName("")
+    void Should_ReturnAllResponseOfExistTermsEntities_When_RequestTermsList() throws Exception {
+        //given
+        Terms entityA = Terms.builder()
+                .name("대출 이용 약관1")
+                .termsDetailUrl("https://abc-storage.acc/exampletestA")
+                .build();
+
+        Terms entityB = Terms.builder()
+                .name("대출 이용 약관2")
+                .termsDetailUrl("https://abc-storage.acc/exampletestB")
+                .build();
+
+        List<Terms> entities = Arrays.asList(entityA, entityB);
+
+        //mocking
+        Mockito.when(termsRepository.findAll()).thenReturn(entities);
+
+        //when
+        List<Response> actuals = termsService.getAll();
+
+        //then
+        Assertions.assertThat(actuals.size()).isSameAs(entities.size());
     }
 }
