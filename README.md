@@ -256,17 +256,19 @@ https://localhost:8080/counsels
       "code": "0000",
       "desc": "success"
   },
-  "counselId": 1,
-  "name": "김아무",
-  "cellPhone": "010-1111-2222",
-  "email": "yoohyeok@school.com",
-  "memo": "대출 상담을 원합니다 .",
-  "address": "서울 어딘구 여기동",
-  "addressDetail": "123-45",
-  "zipCode": "11122",
-  "appliedAt": "2024-06-07T00:20:44.500463",
-  "createdAt": "2024-06-07T00:20:44.533554",
-  "updatedAt": "2024-06-07T00:20:44.533554"
+  "data:": {
+    "counselId": 1,
+    "name": "김아무",
+    "cellPhone": "010-1111-2222",
+    "email": "yoohyeok@school.com",
+    "memo": "대출 상담을 원합니다 .",
+    "address": "서울 어딘구 여기동",
+    "addressDetail": "123-45",
+    "zipCode": "11122",
+    "appliedAt": "2024-06-07T00:20:44.500463",
+    "createdAt": "2024-06-07T00:20:44.533554",
+    "updatedAt": "2024-06-07T00:20:44.533554"
+  }
 }
 ```
 
@@ -289,17 +291,19 @@ Long : 1
       "code": "0000",
       "desc": "success"
   },
-  "counselId": 1,
-  "name": "김아무",
-  "cellPhone": "010-1111-2222",
-  "email": "yoohyeok@school.com",
-  "memo": "대출 상담을 원합니다 .",
-  "address": "서울 어딘구 여기동",
-  "addressDetail": "123-45",
-  "zipCode": "11122",
-  "appliedAt": "2024-06-07T00:20:44.500463",
-  "createdAt": "2024-06-07T00:20:44.533554",
-  "updatedAt": "2024-06-07T00:20:44.533554"
+  "data:": {
+    "counselId": 1,
+    "name": "김아무",
+    "cellPhone": "010-1111-2222",
+    "email": "yoohyeok@school.com",
+    "memo": "대출 상담을 원합니다 .",
+    "address": "서울 어딘구 여기동",
+    "addressDetail": "123-45",
+    "zipCode": "11122",
+    "appliedAt": "2024-06-07T00:20:44.500463",
+    "createdAt": "2024-06-07T00:20:44.533554",
+    "updatedAt": "2024-06-07T00:20:44.533554"
+  }
 }
 ```
 
@@ -335,17 +339,19 @@ Long : 1
       "code": "0000",
       "desc": "success"
   },
-  "counselId": 1,
-  "name": "박아무",
-  "cellPhone": "010-3333-4444",
-  "email": "yoohyeok@school.com",
-  "memo": "대출 상담을 원합니다 . 2(메모 수정)",
-  "address": "서울 어딘가구 여기동",
-  "addressDetail": "923-45",
-  "zipCode": "33322",
-  "appliedAt": "2024-06-07T00:20:44.500463",
-  "createdAt": "2024-06-07T00:20:44.533554",
-  "updatedAt": "2024-06-07T00:20:44.533554"
+  "data:": {
+    "counselId": 1,
+    "name": "박아무",
+    "cellPhone": "010-3333-4444",
+    "email": "yoohyeok@school.com",
+    "memo": "대출 상담을 원합니다 . 2(메모 수정)",
+    "address": "서울 어딘가구 여기동",
+    "addressDetail": "923-45",
+    "zipCode": "33322",
+    "appliedAt": "2024-06-07T00:20:44.500463",
+    "createdAt": "2024-06-07T00:20:44.533554",
+    "updatedAt": "2024-06-07T00:20:44.533554"
+  }
 }
 ```
 
@@ -482,14 +488,16 @@ https://localhost:8080/applications
       "code": "0000",
       "desc": "success"
   },
-  "applicationId": 1,
-  "name": "김아무",
-  "cellPhone": "010-1111-2222",
-  "email": "yoohyeok@school.com",
-  "hopeAmount": "50000000",
-  "appliedAt": "2024-06-07T00:20:44.500463",
-  "createdAt": "2024-06-07T00:20:44.533554",
-  "updatedAt": "2024-06-07T00:20:44.533554"
+  "data:": {
+    "applicationId": 1,
+    "name": "김아무",
+    "cellPhone": "010-1111-2222",
+    "email": "yoohyeok@school.com",
+    "hopeAmount": "50000000",
+    "appliedAt": "2024-06-07T00:20:44.500463",
+    "createdAt": "2024-06-07T00:20:44.533554",
+    "updatedAt": "2024-06-07T00:20:44.533554"
+  }
 }
 ```
 
@@ -512,14 +520,16 @@ Long : 1
     "code": "0000",
     "desc": "success"
   },
-  "applicationId": 1,
-  "name": "김아무",
-  "cellPhone": "010-1111-2222",
-  "email": "yoohyeok@school.com",
-  "hopeAmount": "50000000",
-  "appliedAt": "2024-06-07T00:20:44.500463",
-  "createdAt": "2024-06-07T00:20:44.533554",
-  "updatedAt": "2024-06-07T00:20:44.533554"
+  "data:": {
+    "applicationId": 1,
+    "name": "김아무",
+    "cellPhone": "010-1111-2222",
+    "email": "yoohyeok@school.com",
+    "hopeAmount": "50000000",
+    "appliedAt": "2024-06-07T00:20:44.500463",
+    "createdAt": "2024-06-07T00:20:44.533554",
+    "updatedAt": "2024-06-07T00:20:44.533554"
+  }
 }
 ```
 
@@ -659,10 +669,45 @@ https://localhost:8080/terms
       "code": "0000",
       "desc": "success"
   },
-  "termsId": 1,
-  "name": "김아무",
-  "termsDetailUrl": "https://abc-storage.acc/exampletest"
-  "createdAt": "2024-06-07T00:20:44.533554",
-  "updatedAt": "2024-06-07T00:20:44.533554"
+  "data:": {
+    "termsId": 1,
+    "name": "신청 이용 약관",
+    "termsDetailUrl": "https://abc-storage.acc/exampletest"
+    "createdAt": "2024-06-07T00:20:44.533554",
+    "updatedAt": "2024-06-07T00:20:44.533554"
+  }
+}
+```
+
+# *이용 약관 전체 조회 기능 구현*
+
+### URL(GET)
+```text
+https://localhost:8080/terms
+```
+
+### Response - TermsDTO.Response
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data:":[ 
+      {
+        "termsId": 1,
+        "name": "신청 이용 약관",
+        "termsDetailUrl": "https://abc-storage.acc/exampletest"
+        "createdAt": "2024-06-07T00:20:44.533554",
+        "updatedAt": "2024-06-07T00:20:44.533554"
+      },
+      {
+        "termsId": 2,
+        "name": "신청 이용 약관",
+        "termsDetailUrl": "https://abc-storage.acc/exampletest"
+        "createdAt": "2024-06-07T00:20:44.533554",
+        "updatedAt": "2024-06-07T00:20:44.533554"
+      }
+  ]
 }
 ```
