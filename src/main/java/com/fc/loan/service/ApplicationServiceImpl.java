@@ -119,9 +119,9 @@ public class ApplicationServiceImpl implements ApplicationService {
         /* saveAll이라는 메소드를 1회 호출함으로써 DB와 JPA와의 통신이 1회만 발생 */
         acceptTermsRepository.saveAll(
             acceptTermsIds.stream()
-                .map(termsId ->
+                    .map(termsId ->
                         AcceptTerms.builder()
-                        .acceptTermsId(applicationId)
+                        .applicationId(applicationId)
                         .termsId(termsId)
                         .build()
                 )
