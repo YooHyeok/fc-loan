@@ -2,8 +2,10 @@ package com.fc.loan.controller;
 
 import com.fc.loan.dto.ResponseDTO;
 import com.fc.loan.service.ApplicationService;
+import com.fc.loan.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.fc.loan.dto.ApplicationDTO.*;
 
@@ -14,6 +16,7 @@ import static com.fc.loan.dto.ApplicationDTO.*;
 public class ApplicationController extends AbstractController{
 
     private final ApplicationService applicationService;
+    private final FileStorageService fileStorageService;
 
     @PostMapping
     public ResponseDTO<Response> create(@RequestBody Request request) {
@@ -39,5 +42,11 @@ public class ApplicationController extends AbstractController{
     @PostMapping("/{applicationId}/terms")
     public ResponseDTO<Boolean> create(@PathVariable Long applicationId, @RequestBody AcceptTerms request) {
         return ok(applicationService.acceptTerms(applicationId, request)); // AbstractController에 정의된 ok 메소드 호출
+    }
+
+    @PostMapping("/files")
+    public ResponseDTO<Void> upload(MultipartFile file) {
+        fileStorageService.save(file);
+        return ok();
     }
 }
