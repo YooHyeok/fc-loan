@@ -45,8 +45,8 @@ public class ApplicationController extends AbstractController{
     }
 
     @PostMapping("/files")
-    public ResponseDTO<Void> upload(MultipartFile file) {
-        fileStorageService.save(file);
+    public ResponseDTO<Void> upload(MultipartFile[] files) {
+        fileStorageService.save(files);
         return ok();
     }
 }
