@@ -4,8 +4,16 @@ import com.fc.loan.dto.ResponseDTO;
 import com.fc.loan.service.ApplicationService;
 import com.fc.loan.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.fc.loan.dto.ApplicationDTO.*;
 
@@ -48,5 +56,18 @@ public class ApplicationController extends AbstractController{
     public ResponseDTO<Void> upload(MultipartFile[] files) {
         fileStorageService.save(files);
         return ok();
+    }
+
+    /**
+     * ResponseDTO에 header 설정에 대한 처리를 하지 않았으므로 ResponseEntity를 사용한다.
+     * @param fileName
+     * @return
+     */
+    @GetMapping("/files")
+    public ResponseEntity<Resource> load(String fileName) {
+        Resource file = fileStorageService.load(fileName);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
     }
 }
