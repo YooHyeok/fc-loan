@@ -4,14 +4,23 @@ import com.fc.loan.exception.BaseException;
 import com.fc.loan.exception.ResultType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +66,20 @@ public class FileStorageServiceImpl implements FileStorageService {
         } catch (IOException e) {
             throw new BaseException(ResultType.SYSTEM_ERROR);
         }
+    }
+
+    @Override
+    public Resource load(String fileName) {
+
+        Path file = Paths.get(uploadPath).resolve(fileName);
+        UrlResource resource = null;// toUri 절대경로를 통해 파일시스템으로 부터 리소스를 받아온다.
+        try {
+            resource = new UrlResource(file.toUri());
+            if (resource.isReadable() || resource.exists()) return resource;
+            throw new BaseException(ResultType.NOT_EXIST);
+        } catch (Exception e) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+
     }
 }
