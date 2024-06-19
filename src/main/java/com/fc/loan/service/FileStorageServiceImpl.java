@@ -21,6 +21,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @RequiredArgsConstructor
@@ -82,4 +85,33 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
 
     }
+
+    @Override
+    public Resource loadAsZip(String[] fileNames) {
+        try {
+            // 압축 파일을 생성하기 위한 임시 파일
+//            Path zipFile = Files.createTempFile("attachZipFiles", ".zip");
+            Path zipFile = Paths.get("attachZipFiles.zip");
+
+            // 파일들을 압축
+            try (ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(zipFile))) {
+                for (String fileName : fileNames) {
+                    Resource file = load(fileName);
+                    if (file.exists() && file.isReadable()) {
+                        ZipEntry zipEntry = new ZipEntry(file.getFilename());
+                        zipOut.putNextEntry(zipEntry);
+                        Files.copy(file.getFile().toPath(), zipOut);
+                        zipOut.closeEntry();
+                    }
+                }
+            }
+            // 압축된 파일을 리소스로 로드
+            System.out.println("zipFile.toUri().toString() = " + zipFile.toUri().toString());
+            return new UrlResource(zipFile.toUri());
+
+        } catch (IOException e) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+    }
+
 }
