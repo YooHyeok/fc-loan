@@ -816,6 +816,11 @@ Long : 1
 서류를 요구하는 경우들이 종종 존재한다.
 
 ## *대출 신청 서류 등록 기능*
+
+### URL(POST)
+```text
+https://localhost:8080/applications/files
+```
 ### Request - FormData
 
 | key   | value   |
@@ -833,3 +838,24 @@ Long : 1
 }
 ```
 
+## *대출 신청 서류 조회 기능*
+
+### URL(GET)
+```text
+https://localhost:8080/applications/files?fileName=파일명.확장자
+```
+### Request - FormData
+
+| key      | value   |
+|----------|---------|
+| filename | 파일명.확장자 |
+
+### Response - ResponseEntity<Resource>
+
+```text
+
+파일이 인코딩되어 깨진 글씨들로 가득하다.
+
+우측 ... 버튼 Save response to file 을 통해 직접 다운받는다.
+
+```
