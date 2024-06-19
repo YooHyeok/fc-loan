@@ -1,5 +1,6 @@
 package com.fc.loan.controller;
 
+import com.fc.loan.dto.FileDTO;
 import com.fc.loan.dto.ResponseDTO;
 import com.fc.loan.service.ApplicationService;
 import com.fc.loan.service.FileStorageService;
@@ -10,10 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.fc.loan.dto.ApplicationDTO.*;
 
@@ -21,7 +26,7 @@ import static com.fc.loan.dto.ApplicationDTO.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/applications")
-public class ApplicationController extends AbstractController{
+public class ApplicationController extends AbstractController {
 
     private final ApplicationService applicationService;
     private final FileStorageService fileStorageService;
@@ -52,6 +57,12 @@ public class ApplicationController extends AbstractController{
         return ok(applicationService.acceptTerms(applicationId, request)); // AbstractController에 정의된 ok 메소드 호출
     }
 
+    /**
+     * [입회 서류 서버 업로드] <br/>
+     * 다중 파일을 서버의 upload 디렉토리 경로에 업로드 한다. (다중 파일)
+     * @param files
+     * @return
+     */
     @PostMapping("/files")
     public ResponseDTO<Void> upload(MultipartFile[] files) {
         fileStorageService.save(files);
@@ -59,15 +70,36 @@ public class ApplicationController extends AbstractController{
     }
 
     /**
+     * [입회 서류 로컬 다운로드] <br/>
+     * 서버의 upload 디렉토리 경로로 부터 파라미터로 넘겨받은 파일명에 대한 파일을 찾고
+     * 클라이언트 로컬의 download 디렉토리 경로로 해당 파일을 다운로드 한다.
      * ResponseDTO에 header 설정에 대한 처리를 하지 않았으므로 ResponseEntity를 사용한다.
      * @param fileName
      * @return
      */
     @GetMapping("/files")
-    public ResponseEntity<Resource> load(String fileName) {
+    public ResponseEntity<Resource> download(String fileName) {
         Resource file = fileStorageService.load(fileName);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
+
+    /**
+     * [입회 서류 압축파일 로컬 다운로드] <br/>
+     * 서버의 upload 디렉토리 경로로 부터 파라미터로 넘겨받은 파일명에 대한 파일들을 찾고
+     * 클라이언트 로컬의 download 디렉토리 경로로 해당 파일들을 압축 다운로드 한다.
+     * ResponseDTO에 header 설정에 대한 처리를 하지 않았으므로 ResponseEntity를 사용한다.
+     * @param fileNames
+     * @return
+     */
+    @GetMapping("/zipFiles")
+    public ResponseEntity<Resource> downloads(String[] fileNames) {
+        System.out.println("fileNames = " + Arrays.toString(fileNames));
+        Resource file = fileStorageService.loadAsZip(fileNames);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
+    }
+
 }
