@@ -859,3 +859,25 @@ https://localhost:8080/applications/files?fileName=파일명.확장자
 우측 ... 버튼 Save response to file 을 통해 직접 다운받는다.
 
 ```
+
+## *대출 신청 서류 압축파일 조회 기능*
+
+### URL(GET)
+```text
+https://localhost:8080/applications/zipFiles?fileNames=파일명1.확장자,파일명2.확장자
+```
+### Request - FormData
+
+| key      | value             |
+|----------|-------------------|
+| fileNames | 파일명1.확장자,파일명2.확장자 |
+
+### Response - ResponseEntity<Resource>
+
+```text
+
+파일이 인코딩되어 깨진 글씨들로 가득하다.
+
+우측 ... 버튼 Save response to file 을 통해 직접 다운받는다.
+
+```
