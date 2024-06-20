@@ -11,4 +11,5 @@ public interface FileStorageService {
     void save(MultipartFile[] files);
     Resource load(String fileName);
     Resource loadAsZip(String[] fileNames);
+    Stream<Path> loadAll();
 }
