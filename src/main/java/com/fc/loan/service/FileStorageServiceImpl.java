@@ -114,4 +114,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
+    @Override
+    public Stream<Path> loadAll() {
+        try {
+            /* walk : Paths 경로에 해당하는 모든 경로를 탐색 - 함께 전달받은 Depth에 해당하는 파일들을 탐색해서 반환하는 기능 제공 */
+            return Files.walk(Paths.get(uploadPath), 1) // uploadPath의 1Depth에 해당하는 경로만 탐색
+                    .peek(System.out::println)
+                    .filter(path -> !path.equals(Paths.get(uploadPath))); // 파일만 반환해주기 위해 uploadPath의 하위 파일들만 조회하게 된다.
+        } catch (Exception e) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+    }
 }
