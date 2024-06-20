@@ -881,3 +881,31 @@ https://localhost:8080/applications/zipFiles?fileNames=파일명1.확장자,파�
 우측 ... 버튼 Save response to file 을 통해 직접 다운받는다.
 
 ```
+## *대출 신청 입회 서류 파일정보 전체 조회 기능*
+업로드 되어있는 디렉토리에 존재하는 모든 입회서류 파일에 대한 전체 정보를 조회하여 반환한다.  
+`파일명`, `다운로드 리소스 URL`
+
+### URL(GET)
+```text
+https://localhost:8080/applications/files/infos
+```
+
+### Response - ResponseDTO<List<FileDTO\>\>
+```json
+{
+    "result": {
+        "code": "0000",
+        "desc": "success"
+    },
+    "data": [
+        {
+            "name": "Devops프로필.jpg",
+            "url": "http://localhost:8080/applications/files?fileName=Devops프로필.jpg"
+        },
+        {
+            "name": "king.png",
+            "url": "http://localhost:8080/applications/files?fileName=king.png"
+        }
+    ]
+}
+```
