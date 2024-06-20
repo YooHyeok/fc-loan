@@ -102,4 +102,29 @@ public class ApplicationController extends AbstractController {
                 .body(file);
     }
 
+    /**
+     * [입회 서류 정보 전체 조회] <br/>
+     * upload 디렉토리 경로에있는 모든 파일 정보를 읽어들인다. <br/>
+     * {파일명, 다운로드 URL 정보}
+     * @return
+     */
+    @GetMapping("/files/infos")
+    public ResponseDTO<List<FileDTO>> getFileInfos() {
+        return ok(fileStorageService.loadAll()
+                .map(path -> {
+                    /* 파일명 */
+                    String filename = path.getFileName().toString();
+                    /* 실제 서버로부터 다운로드 가능한 URL */
+                    String resourceDownloadUrl =
+                            MvcUriComponentsBuilder
+                            .fromMethodName(ApplicationController.class, "download", filename)
+                            .build()
+                            .toString();
+                    return FileDTO.builder()
+                            .name(filename)
+                            .url(resourceDownloadUrl)
+                            .build();
+                })
+                .collect(Collectors.toList()));
+    }
 }
