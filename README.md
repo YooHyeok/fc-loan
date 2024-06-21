@@ -909,3 +909,24 @@ https://localhost:8080/applications/files/infos
     ]
 }
 ```
+
+## *대출 신청 입회 서류 파일 전체 삭제 기능*
+업로드 되어있는 디렉토리에 존재하는 모든 입회서류 파일들을 삭제한다.  
+FileSystemUtils 의 deleteRecursively() 메소드를 호출함으로써 삭제한다.  
+매개변수로는 `File` 혹은 `Path` 타입으로 받게된다.
+
+### URL(DELETE)
+```text
+https://localhost:8080/applications/files
+```
+
+### Response - ResponseDTO<Void>
+```json
+{
+    "result": {
+        "code": "0000",
+        "desc": "success"
+    },
+    "data": null
+}
+```
