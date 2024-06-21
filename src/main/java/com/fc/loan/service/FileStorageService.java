@@ -12,4 +12,5 @@ public interface FileStorageService {
     Resource load(String fileName);
     Resource loadAsZip(String[] fileNames);
     Stream<Path> loadAll();
+    void deleteAll();
 }
