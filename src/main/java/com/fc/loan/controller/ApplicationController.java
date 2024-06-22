@@ -63,9 +63,9 @@ public class ApplicationController extends AbstractController {
      * @param files
      * @return
      */
-    @PostMapping("/files")
-    public ResponseDTO<Void> upload(MultipartFile[] files) {
-        fileStorageService.save(files);
+    @PostMapping("/{applicationId}/files")
+    public ResponseDTO<Void> upload(@PathVariable Long applicationId, MultipartFile[] files) {
+        fileStorageService.save(applicationId, files);
         return ok();
     }
 
@@ -77,9 +77,9 @@ public class ApplicationController extends AbstractController {
      * @param fileName
      * @return
      */
-    @GetMapping("/files")
-    public ResponseEntity<Resource> download(String fileName) {
-        Resource file = fileStorageService.load(fileName);
+    @GetMapping("/{applicationId}/files")
+    public ResponseEntity<Resource> download(@PathVariable Long applicationId, String fileName) {
+        Resource file = fileStorageService.load(applicationId, fileName);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
@@ -93,10 +93,10 @@ public class ApplicationController extends AbstractController {
      * @param fileNames
      * @return
      */
-    @GetMapping("/zipFiles")
-    public ResponseEntity<Resource> downloads(String[] fileNames) {
+    @GetMapping("/{applicationId}/zipFiles")
+    public ResponseEntity<Resource> downloads(@PathVariable Long applicationId, String[] fileNames) {
         System.out.println("fileNames = " + Arrays.toString(fileNames));
-        Resource file = fileStorageService.loadAsZip(fileNames);
+        Resource file = fileStorageService.loadAsZip(applicationId, fileNames);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
@@ -108,16 +108,16 @@ public class ApplicationController extends AbstractController {
      * {파일명, 다운로드 URL 정보}
      * @return
      */
-    @GetMapping("/files/infos")
-    public ResponseDTO<List<FileDTO>> getFileInfos() {
-        return ok(fileStorageService.loadAll()
+    @GetMapping("/{applicationId}/files/infos")
+    public ResponseDTO<List<FileDTO>> getFileInfos(@PathVariable Long applicationId) {
+        return ok(fileStorageService.loadAll(applicationId)
                 .map(path -> {
                     /* 파일명 */
                     String filename = path.getFileName().toString();
                     /* 실제 서버로부터 다운로드 가능한 URL */
                     String resourceDownloadUrl =
                             MvcUriComponentsBuilder
-                            .fromMethodName(ApplicationController.class, "download", filename)
+                            .fromMethodName(ApplicationController.class, "download", applicationId, filename)
                             .build()
                             .toString();
                     return FileDTO.builder()
@@ -128,9 +128,9 @@ public class ApplicationController extends AbstractController {
                 .collect(Collectors.toList()));
     }
 
-    @DeleteMapping("/files")
-    public ResponseDTO<Void> deleteAll() {
-        fileStorageService.deleteAll();
+    @DeleteMapping("/{applicationId}/files")
+    public ResponseDTO<Void> deleteAll(@PathVariable Long applicationId) {
+        fileStorageService.deleteAll(applicationId);
         return ok();
     }
 }
