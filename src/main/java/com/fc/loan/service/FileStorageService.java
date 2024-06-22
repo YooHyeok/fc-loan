@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface FileStorageService {
-    void save(MultipartFile[] files);
-    Resource load(String fileName);
-    Resource loadAsZip(String[] fileNames);
-    Stream<Path> loadAll();
-    void deleteAll();
+    void save(Long applicationId, MultipartFile[] files);
+    Resource load(Long applicationId, String fileName);
+    Resource loadAsZip(Long applicationId, String[] fileNames);
+    Stream<Path> loadAll(Long applicationId);
+    void deleteAll(Long applicationId);
 }
