@@ -930,3 +930,25 @@ https://localhost:8080/applications/files
     "data": null
 }
 ```
+## 대출 신청 입회 서류 매핑 
+신청 서류가 업로드되는 디렉토리에 신청 정보에 대한 Unique ID를 Depth로 넣어서 경로를 신청 정보 ID를 통해 알 수 있도록  
+규칙을 정해놓고 해당하는 디렉토리로 신청 서류가 올라갈 수 있고 다운받을 수 있도록 기능을 개선한다.  
+ex) `C:\upload\{applicationId}\파일명.확장자`
+
+
+### 수정 내역
+- 입회서류 다중 파일 서버 업로드 (등록)
+- 입회서류 파일 로컬 다운로드 (조회)
+- 입회서류 압축 파일 로컬 다운로드 (조회)
+- 입회서류 파일 정보 전체 조회 (조회)
+- 입회서류 파일 전체 삭제 (삭제)  
+
+위 항목들의 PathVariable로 applicationId 즉 대출 신청 테이블의 고유 값을 넘겨 각각의 업/다운로드 경로 하위에
+고유값을 디렉토리로 한번 더 구성한다.
+
+### URL
+```text
+https://localhost:8080/applications/{applicationId}/**
+```
+
+#### 만약 상위 디렉토리가 존재하지 않는다면 (uploadPath) NosuchFileException이 발생한다.
