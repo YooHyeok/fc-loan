@@ -2,6 +2,7 @@ package com.fc.loan.service;
 
 import com.fc.loan.exception.BaseException;
 import com.fc.loan.exception.ResultType;
+import com.fc.loan.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -30,13 +31,27 @@ import java.util.zip.ZipOutputStream;
 @RequiredArgsConstructor
 public class FileStorageServiceImpl implements FileStorageService {
 
+    private final ApplicationRepository applicationRepository;
+
     @Value("${spring.servlet.multipart.location}")
     private String uploadPath;
 
     @Override
-    public void save(MultipartFile[] files) {
+    public void save(Long applicationId, MultipartFile[] files) {
+        if(!isPresentApplication(applicationId)) throw new BaseException(ResultType.SYSTEM_ERROR);
         /* 전달받은 MultipartFile객체를 읽고 업로드하고자 하는 지정된 경로에 업로드(복사) 한다. */
         try {
+            String applicationPath = uploadPath.concat("/"+applicationId);
+            /* 디렉토리가 존재하지 않는다면 생성해준다. */
+            Path directoryPath = Path.of(applicationPath);
+//            Path directoryPath = Paths.get(applicationPath); // 사용 가능
+
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectory(directoryPath); // 상위 디렉토리(upload 포함 상위)가 존재하지 않을 경우 NoSuchFileException 발생
+//                Files.createDirectories(directoryPath); // 상위 디렉토리가 존재하지 않을 경우 상위를 포함하여 디렉토리를 모두 생성함. - 접근권한 없을 경우 AccessDeninedException발생
+            }
+
+            /* 파일 업로드 시작 */
             for (MultipartFile file : files) {
 
                 /**
@@ -46,7 +61,7 @@ public class FileStorageServiceImpl implements FileStorageService {
                  * 직접적 처리 필요(파일 업로드(복사)시 모든 데이터 수동 처리 <br/>
                  * 버퍼링 지원 부족 (대용량 파일 처리시 직접 버퍼링 구현)
                  */
-                File targetFile = new File(uploadPath, file.getOriginalFilename());
+                File targetFile = new File(applicationPath, file.getOriginalFilename());
                 try (OutputStream os = new FileOutputStream(targetFile)) {
                     os.write(file.getBytes());
                 }
@@ -62,22 +77,26 @@ public class FileStorageServiceImpl implements FileStorageService {
                  */
                 /*Files.copy(
                         file.getInputStream(),
-                        Paths.get(uploadPath).resolve(file.getOriginalFilename()),
+                        Paths.get(applicationPath).resolve(file.getOriginalFilename()),
                         StandardCopyOption.REPLACE_EXISTING // 기존 파일 존재시 덮어 쓴다.
                 );*/
 
             }
         } catch (IOException e) {
-            throw new BaseException(ResultType.SYSTEM_ERROR);
+            throw new RuntimeException(e);
+//            throw new BaseException(ResultType.SYSTEM_ERROR);
         }
     }
 
     @Override
-    public Resource load(String fileName) {
+    public Resource load(Long applicationId, String fileName) {
+        if(!isPresentApplication(applicationId)) throw new BaseException(ResultType.SYSTEM_ERROR);
 
-        Path file = Paths.get(uploadPath).resolve(fileName);
         UrlResource resource = null;// toUri 절대경로를 통해 파일시스템으로 부터 리소스를 받아온다.
         try {
+            String applicationPath = uploadPath.concat("/"+applicationId);
+
+            Path file = Paths.get(applicationPath).resolve(fileName);
             resource = new UrlResource(file.toUri());
             if (resource.isReadable() || resource.exists()) return resource;
             throw new BaseException(ResultType.NOT_EXIST);
@@ -88,7 +107,8 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public Resource loadAsZip(String[] fileNames) {
+    public Resource loadAsZip(Long applicationId, String[] fileNames) {
+
         try {
             // 압축 파일을 생성하기 위한 임시 파일
 //            Path zipFile = Files.createTempFile("attachZipFiles", ".zip");
@@ -97,7 +117,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             // 파일들을 압축
             try (ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(zipFile))) {
                 for (String fileName : fileNames) {
-                    Resource file = load(fileName);
+                    Resource file = load(applicationId, fileName);
                     if (file.exists() && file.isReadable()) {
                         ZipEntry zipEntry = new ZipEntry(file.getFilename());
                         zipOut.putNextEntry(zipEntry);
@@ -116,10 +136,14 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public Stream<Path> loadAll() {
+    public Stream<Path> loadAll(Long applicationId) {
+        if(!isPresentApplication(applicationId)) throw new BaseException(ResultType.SYSTEM_ERROR);
+
         try {
+            String applicationPath = uploadPath.concat("/"+applicationId);
+
             /* walk : Paths 경로에 해당하는 모든 경로를 탐색 - 함께 전달받은 Depth에 해당하는 파일들을 탐색해서 반환하는 기능 제공 */
-            return Files.walk(Paths.get(uploadPath), 1) // uploadPath의 1Depth에 해당하는 경로만 탐색
+            return Files.walk(Paths.get(applicationPath), 1) // uploadPath의 1Depth에 해당하는 경로만 탐색
                     .peek(System.out::println)
                     .filter(path -> !path.equals(Paths.get(uploadPath))); // 파일만 반환해주기 위해 uploadPath의 하위 파일들만 조회하게 된다.
         } catch (Exception e) {
@@ -128,7 +152,19 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(Paths.get(uploadPath).toFile()); // uploadPath 경로에 존재하는 모든 파일을 삭제한다.
+    public void deleteAll(Long applicationId) {
+        if(!isPresentApplication(applicationId)) throw new BaseException(ResultType.SYSTEM_ERROR);
+        try {
+            String applicationPath = uploadPath.concat("/" + applicationId);
+
+            FileSystemUtils.deleteRecursively(Paths.get(applicationPath).toFile()); // uploadPath 경로에 존재하는 모든 파일을 삭제한다.
+        } catch (Exception e) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+
+        }
+    }
+
+    private boolean isPresentApplication(Long applicationId) {
+        return applicationRepository.existsById(applicationId);
     }
 }
