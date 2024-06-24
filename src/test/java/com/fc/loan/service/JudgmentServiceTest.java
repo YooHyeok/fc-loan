@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static com.fc.loan.dto.JudgmentDTO.*;
 
@@ -32,7 +33,7 @@ class JudgmentServiceTest {
     private ModelMapper modelMapper;
 
     @Test
-    @DisplayName("대출 심사 생성 요청이 왔을때 새 대출 심사 엔티티를 반환하여 응답한다.")
+    @DisplayName("등록 - 대출 심사 생성 요청이 왔을때 새 대출 심사 엔티티를 반환하여 응답한다.")
     void Should_ReturnResponseOfNewJudgmentEntity_When_RequestNewJudgment() throws Exception {
         //given
         Long findByApplicationId = 1L;
@@ -57,6 +58,23 @@ class JudgmentServiceTest {
         Assertions.assertThat(actual.getApplicationId()).isSameAs(entity.getApplicationId());
         Assertions.assertThat(actual.getName()).isSameAs(entity.getName());
         Assertions.assertThat(actual.getApprovalAmount()).isSameAs(entity.getApprovalAmount());
+
+    }
+
+    @Test
+    @DisplayName("조회 - 존재하는 대출 심사 ID 요청이 들어왔을 때 존재하는 대출 심사 엔티티를 응답으로 반환한다.")
+    void Should_ReturnResponseOfExistJudgmentEntity_When_RequestExistJudgmentId() throws Exception {
+        //given
+        Long findByJudgementId = 1L;
+        Judgment entity = Judgment.builder()
+                .judgmentId(findByJudgementId)
+                .build();
+        //Mocing
+        Mockito.when(judgmentRepository.findById(findByJudgementId)).thenReturn(Optional.ofNullable(entity));
+        //when
+        Response actual = judgmentService.get(findByJudgementId);
+        //then
+        Assertions.assertThat(actual.getJudgmentId()).isSameAs(findByJudgementId);
 
     }
 }
