@@ -1038,3 +1038,33 @@ https://localhost:8080/judgments
   }
 }
 ```
+
+## *대출 심사 조회 기능 (심사 id 기준)*
+
+### URL(GET)
+```text
+https://localhost:8080/judgments/{judgmentId}
+```
+
+### PathVariable - judgmentId
+```text
+Long : 1
+```
+
+### Response - JudgmentDTO.Response
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": {
+    "judgmentId": 1,
+    "applicationId": 1,
+    "name": "김아무",
+    "approvalAmount": 5000000,
+    "createdAt": "2024-06-25T02:57:52.459969",
+    "updatedAt": "2024-06-25T02:57:52.459969"
+  }
+}
+```
