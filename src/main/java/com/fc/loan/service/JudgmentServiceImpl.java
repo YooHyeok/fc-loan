@@ -30,7 +30,7 @@ public class JudgmentServiceImpl implements JudgmentService {
          */
 
 
-        if (!isPresentApplication(request)) throw new BaseException(ResultType.SYSTEM_ERROR);
+        if (!isPresentApplication(request.getApplicationId())) throw new BaseException(ResultType.SYSTEM_ERROR);
         Judgment entity = modelMapper.map(request, Judgment.class);
         return modelMapper.map(judgmentRepository.save(entity), Response.class);
     }
@@ -43,7 +43,19 @@ public class JudgmentServiceImpl implements JudgmentService {
         return modelMapper.map(judgment, Response.class);
     }
 
-    private boolean isPresentApplication(Request request) {
-        return applicationRepository.existsById(request.getApplicationId());
+    @Override
+    public Response getJudgmentOfApplication(Long applicationId) {
+
+        if (!isPresentApplication(applicationId)) throw new BaseException(ResultType.SYSTEM_ERROR);
+
+        Judgment judgment = judgmentRepository.findByApplicationId(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        return modelMapper.map(judgment, Response.class);
+    }
+
+    private boolean isPresentApplication(Long applicationId) {
+        return applicationRepository.existsById(applicationId);
     }
 }
