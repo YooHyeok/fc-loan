@@ -77,4 +77,26 @@ class JudgmentServiceTest {
         Assertions.assertThat(actual.getJudgmentId()).isSameAs(findByJudgementId);
 
     }
+
+    @Test
+    @DisplayName("조회 - 존재하는 대출 신청 ID 요청이 들어왔을 때 존재하는 대출 심사 엔티티를 응답으로 반환한다. ")
+    void Should_ReturnResponseOfExistJudgmentEntity_When_RequestExistApplicationId() throws Exception {
+        //given
+        Long findByApplicationId = 1L;
+        Judgment entity = Judgment.builder()
+                .judgmentId(1L)
+                .applicationId(findByApplicationId)
+                .build();
+
+        //Mocking
+        Mockito.when(applicationRepository.existsById(findByApplicationId)).thenReturn(true);
+        Mockito.when(judgmentRepository.findByApplicationId(findByApplicationId)).thenReturn(Optional.ofNullable(entity));
+
+        //when
+        Response actual = judgmentService.getJudgmentOfApplication(findByApplicationId);
+
+        //then
+        Assertions.assertThat(actual.getJudgmentId()).isSameAs(1L);
+        Assertions.assertThat(actual.getApplicationId()).isSameAs(entity.getApplicationId());
+    }
 }
