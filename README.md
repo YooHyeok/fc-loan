@@ -1098,3 +1098,42 @@ Long : 1
   }
 }
 ```
+
+## *대출 심사 수정 기능*
+
+### URL(POST)
+```text
+https://localhost:8080/judgments/{judgmentId}
+```
+
+### PathVariable - judgmentId
+```text
+Long : 1
+```
+
+### Request - JudgmentDTO.Request
+```json
+{
+  "applicationId" : "1",
+  "name" : "김아무",
+  "approvalAmount" : "10000000" // 변경할 값
+}
+```
+
+### Response - JudgmentDTO.Response
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": {
+    "judgmentId": 1,
+    "applicationId": 1,
+    "name": "김아무", // 기존 값은 "유 아무" 였음
+    "approvalAmount": 10000000, // 기존 값은 5000000임
+    "createdAt": "2024-06-25T02:57:52.459969",
+    "updatedAt": "2024-06-25T02:57:52.459969"
+  }
+}
+```
