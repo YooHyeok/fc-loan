@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import static com.fc.loan.dto.JudgmentDTO.*;
+import static com.fc.loan.dto.JudgmentDTO.Request;
+import static com.fc.loan.dto.JudgmentDTO.Response;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,17 @@ public class JudgmentServiceImpl implements JudgmentService {
             throw new BaseException(ResultType.SYSTEM_ERROR);
         });
 
+        return modelMapper.map(judgment, Response.class);
+    }
+
+    @Override
+    public Response update(Long judgmentId, Request request) {
+        Judgment judgment = judgmentRepository.findById(judgmentId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        judgment.setName(request.getName());
+        judgment.setApprovalAmount(request.getApprovalAmount());
+        judgmentRepository.save(judgment);
         return modelMapper.map(judgment, Response.class);
     }
 
