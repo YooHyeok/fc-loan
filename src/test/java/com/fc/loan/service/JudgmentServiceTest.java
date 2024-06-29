@@ -99,4 +99,33 @@ class JudgmentServiceTest {
         Assertions.assertThat(actual.getJudgmentId()).isSameAs(1L);
         Assertions.assertThat(actual.getApplicationId()).isSameAs(entity.getApplicationId());
     }
+    @Test
+    @DisplayName("수정 - 존재하는 대출신청 정보에 대한 수정 요청이 왔을 때 존재하는 대출신청 엔티티를 수정한 뒤 응답 객체로 반환한다.")
+    void Should_ReturnUpdatedResponseOfExistJudgementEntity_When_RequestUpdateExistJudgmentInfo() throws Exception {
+        //given
+        Long findByJudgmentId = 1L;
+
+        Judgment entity = Judgment.builder()
+                .judgmentId(findByJudgmentId)
+                .name("Member U")
+                .approvalAmount(BigDecimal.valueOf(5000000))
+                .build();
+
+        Request request = Request.builder()
+                .name("Member Yoo")
+                .approvalAmount(BigDecimal.valueOf(10000000))
+                .build();
+
+
+        Mockito.when(judgmentRepository.findById(findByJudgmentId)).thenReturn(Optional.ofNullable(entity));
+        Mockito.when(judgmentRepository.save(ArgumentMatchers.any(Judgment.class))).thenReturn(entity); // return절의 entity는 service의 update() 메소드 내부적으로 값이 변경된다. (name/approvalAmount)
+
+        //when
+        Response actual = judgmentService.update(findByJudgmentId, request);
+        //then
+        Assertions.assertThat(actual.getJudgmentId()).isSameAs(findByJudgmentId);
+        Assertions.assertThat(actual.getName()).isSameAs(request.getName());
+        Assertions.assertThat(actual.getApprovalAmount()).isSameAs(request.getApprovalAmount());
+
+    }
 }
