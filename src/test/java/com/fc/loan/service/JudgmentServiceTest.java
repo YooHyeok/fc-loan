@@ -128,4 +128,23 @@ class JudgmentServiceTest {
         Assertions.assertThat(actual.getApprovalAmount()).isSameAs(request.getApprovalAmount());
 
     }
+    @Test
+    @DisplayName("")
+    void Should_ReturnDeletedJudgementEntity_When_RequestDeleteExistJudgementId() throws Exception {
+        //given
+        Long findByJudgmentId = 1L;
+
+        Judgment entity = Judgment.builder()
+                .judgmentId(findByJudgmentId)
+                .build();
+
+        Mockito.when(judgmentRepository.findById(findByJudgmentId)).thenReturn(Optional.ofNullable(entity));
+        Mockito.when(judgmentRepository.save(ArgumentMatchers.any(Judgment.class))).thenReturn(entity); // return절의 entity는 service의 update() 메소드 내부적으로 값이 변경된다. (name/approvalAmount)
+        //when
+
+        judgmentService.delete(findByJudgmentId);
+
+        //then
+        Assertions.assertThat(entity.getIsDeleted()).isSameAs(true);
+    }
 }
