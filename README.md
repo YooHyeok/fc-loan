@@ -1101,7 +1101,7 @@ Long : 1
 
 ## *대출 심사 수정 기능*
 
-### URL(POST)
+### URL(PUT)
 ```text
 https://localhost:8080/judgments/{judgmentId}
 ```
@@ -1135,5 +1135,28 @@ Long : 1
     "createdAt": "2024-06-25T02:57:52.459969",
     "updatedAt": "2024-06-25T02:57:52.459969"
   }
+}
+```
+
+## *대출 심사 삭제 기능*
+
+### URL(DELETE)
+```text
+https://localhost:8080/judgments/{judgmentId}
+```
+
+### PathVariable - judgmentId
+```text
+Long : 1
+```
+
+### Response - JudgmentDTO.Response
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": null
 }
 ```
