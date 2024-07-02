@@ -30,6 +30,6 @@ public class Judgment extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(12) DEFAULT NULL COMMENT '심사자'")
     private String name;
 
-    @Column(columnDefinition = "BIGINT NOT NULL COMMENT '승인 금액'")
+    @Column(columnDefinition = "DECIMAL(15,2) NOT NULL COMMENT '승인 금액'")
     private BigDecimal approvalAmount;
 }
