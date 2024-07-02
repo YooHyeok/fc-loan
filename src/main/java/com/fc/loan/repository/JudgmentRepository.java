@@ -1,5 +1,6 @@
-package com.fc.loan.domain;
+package com.fc.loan.repository;
 
+import com.fc.loan.domain.Judgment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
