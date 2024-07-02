@@ -1,8 +1,10 @@
 package com.fc.loan.service;
 
 
+import com.fc.loan.domain.Application;
 import com.fc.loan.domain.Judgment;
-import com.fc.loan.domain.JudgmentRepository;
+import com.fc.loan.dto.ApplicationDTO;
+import com.fc.loan.repository.JudgmentRepository;
 import com.fc.loan.exception.BaseException;
 import com.fc.loan.exception.ResultType;
 import com.fc.loan.repository.ApplicationRepository;
@@ -74,6 +76,19 @@ public class JudgmentServiceImpl implements JudgmentService {
         });
         judgment.setIsDeleted(true);
         judgmentRepository.save(judgment);
+    }
+
+    @Override
+    public ApplicationDTO.GrantAmount grant(Long judgmentId) {
+        Judgment judgment = judgmentRepository.findById(judgmentId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        Application application = applicationRepository.findById(judgment.getApplicationId()).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        application.setApprovalAmount(judgment.getApprovalAmount());
+        applicationRepository.save(application);
+        return modelMapper.map(application, ApplicationDTO.GrantAmount.class);
     }
 
     private boolean isPresentApplication(Long applicationId) {
