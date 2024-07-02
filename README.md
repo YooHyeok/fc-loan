@@ -1160,3 +1160,36 @@ Long : 1
   "data": null
 }
 ```
+
+## *대출 심사 금액 부여 기능*
+대출 심사를 한 뒤, 승인 된 금액 까지 심사자를 통해 결정이 되었다.  
+실시간으로 반영이 바로 된다기보다 최종 결정권자 즉, 대출 집행과 관련 해서 결정을 최종 승인하는 사람을 통해 
+실제로 부여되는 프로세스가 있을 것이다.  
+심사자를 통해 실시간으로 바로 승인이 되는 경우도 있을 수 있겠지만, 심사자가 심사는 따로 하고 최종적으로 반영 되는 부분을
+구분해서 구현해 본다.
+
+### URL(PATCH)
+```text
+https://localhost:8080/judgments/{judgmentId}/grant
+```
+
+### PathVariable - judgmentId
+```text
+Long : 1
+```
+
+### Response - JudgmentDTO.Response
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": {
+    "applicationId": 1,
+    "approvalAmount": 10000000, // judgment의 approvalAmount로 세팅 수정
+    "createdAt": "2024-06-25T02:57:52.459969",
+    "updatedAt": "2024-06-25T02:57:52.459969"
+  }
+}
+```
