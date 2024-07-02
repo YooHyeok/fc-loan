@@ -1,9 +1,8 @@
 package com.fc.loan.service;
 
-import com.fc.loan.domain.Counsel;
+import com.fc.loan.domain.Application;
 import com.fc.loan.domain.Judgment;
-import com.fc.loan.domain.JudgmentRepository;
-import com.fc.loan.dto.JudgmentDTO;
+import com.fc.loan.repository.JudgmentRepository;
 import com.fc.loan.repository.ApplicationRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -129,7 +128,7 @@ class JudgmentServiceTest {
 
     }
     @Test
-    @DisplayName("")
+    @DisplayName("삭제 - 존재하는 대출신청 정보에 대한 삭제 요청이 왔을 때 대출신청 엔티티를 삭제한다.")
     void Should_ReturnDeletedJudgementEntity_When_RequestDeleteExistJudgementId() throws Exception {
         //given
         Long findByJudgmentId = 1L;
@@ -146,5 +145,31 @@ class JudgmentServiceTest {
 
         //then
         Assertions.assertThat(entity.getIsDeleted()).isSameAs(true);
+    }
+
+    @Test
+    @DisplayName("대출심사 금액부여 - 대출심사 정보에 대한 대출 심사 금액 부여 요청이 왔을 때 대출 신청 엔티티를 수정 후 반환한다.")
+    void Should_ReturnUpdateResponseOfApplicationEntity_When_RequestGrantApprovalAmountOfJudgmentInfo() throws Exception {
+        //given
+        Long findByApplication = 1L;
+        Long findByJudgmentId = 1L;
+        Application application = Application.builder()
+                .applicationId(findByApplication)
+                .build();
+        Judgment judgment = Judgment.builder()
+                .judgmentId(findByJudgmentId)
+                .applicationId(application.getApplicationId())
+                .approvalAmount(BigDecimal.valueOf(5000000))
+                .build();
+        //when
+        Mockito.when(judgmentRepository.findById(findByJudgmentId)).thenReturn(Optional.ofNullable(judgment));
+        Mockito.when(applicationRepository.findById(judgment.getApplicationId())).thenReturn(Optional.ofNullable(application));
+        Mockito.when(applicationRepository.save(ArgumentMatchers.any(Application.class))).thenReturn(application);
+
+        judgmentService.grant(findByJudgmentId);
+
+        //then
+        Assertions.assertThat(judgment.getApprovalAmount()).isSameAs(application.getApprovalAmount());
+
     }
 }
