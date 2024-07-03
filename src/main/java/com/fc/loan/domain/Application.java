@@ -43,5 +43,7 @@ public class Application extends BaseEntity {
     private LocalDateTime maturity;
     @Column(columnDefinition = "DECIMAL(15,2) DEFAULT NULL COMMENT '대출 승인 금액'")
     private BigDecimal approvalAmount;
+    @Column(columnDefinition = "DATETIME DEFAULT NULL COMMENT '계약일자'")
+    private LocalDateTime contractedAt;
 
 }
