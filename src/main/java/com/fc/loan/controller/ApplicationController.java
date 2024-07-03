@@ -133,4 +133,14 @@ public class ApplicationController extends AbstractController {
         fileStorageService.deleteAll(applicationId);
         return ok();
     }
+
+    /**
+     * Ch.05-04 대출 계약 기능
+     * @param applicationId
+     * @return Response - null을 반환하므로 추후 void 고려
+     */
+    @PutMapping("/{applicationId}/contract")
+    public ResponseDTO<Response> contract(@PathVariable Long applicationId) {
+        return ok(applicationService.contract(applicationId));
+    }
 }
