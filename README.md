@@ -1309,3 +1309,26 @@ Long : 1
   }
 
   ```
+
+## *대출 계약 기능*
+
+### URL(PUT)
+```text
+https://localhost:8080/applications/{applicationId}/contract
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Response - ResponseDTO<Response.ApplicationDTO>
+```json
+{
+    "result": {
+        "code": "0000",
+        "desc": "success"
+    },
+    "data": null
+}
+```
