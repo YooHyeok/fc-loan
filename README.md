@@ -819,8 +819,14 @@ Long : 1
 
 ### URL(POST)
 ```text
-https://localhost:8080/applications/files
+https://localhost:8080/applications/{applicationId}/files
 ```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
 ### Request - FormData
 
 | key   | value   |
@@ -842,8 +848,14 @@ https://localhost:8080/applications/files
 
 ### URL(GET)
 ```text
-https://localhost:8080/applications/files?fileName=파일명.확장자
+https://localhost:8080/applications/{applicationId}/files?fileName=파일명.확장자
 ```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
 ### Request - FormData
 
 | key      | value   |
@@ -864,8 +876,14 @@ https://localhost:8080/applications/files?fileName=파일명.확장자
 
 ### URL(GET)
 ```text
-https://localhost:8080/applications/zipFiles?fileNames=파일명1.확장자,파일명2.확장자
+https://localhost:8080/applications/{applicationId}/zipFiles?fileNames=파일명1.확장자,파일명2.확장자
 ```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
 ### Request - FormData
 
 | key      | value             |
@@ -887,7 +905,12 @@ https://localhost:8080/applications/zipFiles?fileNames=파일명1.확장자,파�
 
 ### URL(GET)
 ```text
-https://localhost:8080/applications/files/infos
+https://localhost:8080/applications/{applicationId}/files/infos
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
 ```
 
 ### Response - ResponseDTO<List<FileDTO\>\>
@@ -917,7 +940,12 @@ FileSystemUtils 의 deleteRecursively() 메소드를 호출함으로써 삭제�
 
 ### URL(DELETE)
 ```text
-https://localhost:8080/applications/files
+https://localhost:8080/applications/{applicationId}/files
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
 ```
 
 ### Response - ResponseDTO<Void>
