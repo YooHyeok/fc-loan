@@ -8,6 +8,7 @@ import com.fc.loan.exception.BaseException;
 import com.fc.loan.exception.ResultType;
 import com.fc.loan.repository.AcceptTermsRepository;
 import com.fc.loan.repository.ApplicationRepository;
+import com.fc.loan.repository.JudgmentRepository;
 import com.fc.loan.repository.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +30,7 @@ import static com.fc.loan.dto.ApplicationDTO.Response;
 @Service
 @RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
+    private final JudgmentRepository judgmentRepository;
     private final AcceptTermsRepository acceptTermsRepository;
 
     private final ModelMapper modelMapper; // ModelMapperConfig로 등록한 ModelMapper Bean 생성자 의존성 주입
@@ -128,6 +131,43 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .collect(Collectors.toList())
         );
         return true;
+    }
+
+    /**
+     * Ch.05-04 대출 계약 기능
+     * flow
+     * <pre>
+     * 1. 신청 정보 존재 여부
+     * 2. 심사 정보 존재 여부
+     * 3. 승인 금액 > 0
+     *      계약을 한다는 조건 자체는 대출 심사를 통해 빌린 사람에게 대출 조건으로 얼마를 집행을 해줄지에 대해서 제시를 했을 것이며,
+     *      승인을 했을 때 계약이 이루어 지는 것이기 때문에 신청 정보에서 승인된 금액이 0보다 커야 한다.
+     * 4. 계약 체결
+     * </pre>
+     * @param applicationId
+     * @return Response - null을 반환하므로 추후 void 고려
+     */
+    @Override
+    public Response contract(Long applicationId) {
+        // 신청 정보 존재 여부
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // 심사 정보 존재 여부
+        judgmentRepository.findByApplicationId(application.getApplicationId()).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // 승인 금액 > 0 (compareTo - 값 비교: 반환값이 0 이면 두 값이 동일 | 양수이면 호출 객체가 더 큼/음수이면 호출 객체가 더 작음)
+        if (application.getApprovalAmount() == null || application.getApprovalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+
+        // 계약 체결 (계약 일자 현재 시점으로 반영)
+        application.setContractedAt(LocalDateTime.now());
+        applicationRepository.save(application);
+        return null;
     }
 
 }
