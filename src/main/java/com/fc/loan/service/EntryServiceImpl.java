@@ -1,0 +1,56 @@
+package com.fc.loan.service;
+
+import com.fc.loan.domain.Application;
+import com.fc.loan.domain.Entry;
+import com.fc.loan.dto.BalanceDTO;
+import com.fc.loan.dto.EntryDTO;
+import com.fc.loan.exception.BaseException;
+import com.fc.loan.exception.ResultType;
+import com.fc.loan.repository.ApplicationRepository;
+import com.fc.loan.repository.EntryRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static com.fc.loan.dto.EntryDTO.*;
+
+@Service
+@RequiredArgsConstructor
+public class EntryServiceImpl implements EntryService {
+
+    private final EntryRepository entryRepository;
+    private final BalanceService balanceService;
+    private final ApplicationRepository applicationRepository;
+    private final ModelMapper modelMapper;
+
+    @Override
+    public Response create(Long applicationId, Request request) {
+        //계약 체결 여부 검증
+        if (!isContractedApplication(applicationId)) throw new BaseException(ResultType.SYSTEM_ERROR);
+
+        // 대출 집행 등록
+        Entry entry = modelMapper.map(request, Entry.class);
+        entry.setApplicationId(applicationId);
+        entryRepository.save(entry);
+
+        // 대출 잔고 관리 - 잔고 저장
+        balanceService.create(
+                applicationId,
+                /* 잔고: EntryDTO 요청으로 부터 집행금액(EntryAmount) 추출 */
+                BalanceDTO.Request
+                    .builder()
+                    .entryAmount(request.getEntryAmount())
+                    .build()
+        );
+        return modelMapper.map(entry, Response.class);
+    }
+
+    private boolean isContractedApplication(Long applicationId) {
+        Optional<Application> existed = applicationRepository.findById(applicationId);
+        if (existed.isEmpty()) return false; // 비어있다면 false 리턴
+        return existed.get().getContractedAt() != null; // 비어있지 않다면 승인여부 null 체크
+    }
+}
