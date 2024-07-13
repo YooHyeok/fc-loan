@@ -1361,12 +1361,12 @@ Long : 1
 }
 ```
 
-## *대출 등록 기능*
+## *대출 집행 등록 기능*
 처음 도메인 설계시 정의한 대로 일반적으로 대출이 집행된 후 대출 금액중 일부를 상환해 나가야 한다.  
 따라서 대출금액이 얼마나 남았는지 대출 잔고를 저장할 엔티티를 설게했었다.     
 대출 등록 기능에서는 대출을 집행한 뒤 대출을 등록(Entry)하는것 뿐만 아니라 집행된 대출에 대한 잔고(Balance-entryAmount)도 함께 저장한다.    
 
-### URL(PUT)
+### URL(POST)
 ```text
 https://localhost:8080/applications/{applicationId}/entries
 ```
@@ -1394,6 +1394,35 @@ Long : 1
       "entryId": 1,
       "applicationId": 1,
       "entryAmount": 5000000,
+      "createdAt": "2024-06-25T02:57:52.459969",
+      "updatedAt": "2024-06-25T02:57:52.459969"
+    }
+}
+```
+
+## *대출 집행 조회 기능*
+
+### URL(GET)
+```text
+https://localhost:8080/applications/{applicationId}/entries
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Response - ResponseDTO<Response.EntryDTO>
+```json
+{
+    "result": {
+        "code": "0000",
+        "desc": "success"
+    },
+    "data": {
+      "entryId": 1,
+      "applicationId": 1,
+      "entryAmount": 5000000.00,
       "createdAt": "2024-06-25T02:57:52.459969",
       "updatedAt": "2024-06-25T02:57:52.459969"
     }
