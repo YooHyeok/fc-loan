@@ -2,9 +2,10 @@ package com.fc.loan.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class CounselDTO {
+public class CounselDTO implements Serializable {
 
     @NoArgsConstructor
     @AllArgsConstructor
