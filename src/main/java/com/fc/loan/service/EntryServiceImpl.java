@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.fc.loan.dto.EntryDTO.*;
@@ -46,6 +47,14 @@ public class EntryServiceImpl implements EntryService {
                     .build()
         );
         return modelMapper.map(entry, Response.class);
+    }
+
+    @Override
+    public Response get(Long applicationId) {
+        Optional<Entry> entry = entryRepository.findByApplicationId();
+        /* 존재한다면 Response DTO로 변환후 반환 - 반대는 null*/
+        if (entry.isPresent()) return modelMapper.map(entry, Response.class);
+        return null;
     }
 
     private boolean isContractedApplication(Long applicationId) {
