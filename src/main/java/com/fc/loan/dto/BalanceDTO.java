@@ -19,6 +19,16 @@ public class BalanceDTO implements Serializable {
 
     @NoArgsConstructor
     @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class UpdateRequest {
+        private Long applicationId; // 어떤 신청정보의 상환인지
+        private BigDecimal beforeEntryAmount; // 집행금액
+        private BigDecimal afterEntryAmount; // 집행금액
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     @Getter
     @Setter
