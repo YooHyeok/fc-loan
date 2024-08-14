@@ -1368,7 +1368,7 @@ Long : 1
 
 ### URL(POST)
 ```text
-https://localhost:8080/applications/{applicationId}/entries
+https://localhost:8080/internal/applications/{applicationId}/entries
 ```
 
 ### PathVariable - applicationId
@@ -1404,7 +1404,7 @@ Long : 1
 
 ### URL(GET)
 ```text
-https://localhost:8080/applications/{applicationId}/entries
+https://localhost:8080/internal/applications/{applicationId}/entries
 ```
 
 ### PathVariable - applicationId
@@ -1439,7 +1439,7 @@ as-is(현재)의 entryAmount와  to-be(미래) entryAmount가 같이 비교가 �
 
 ### URL(PUT)
 ```text
-https://localhost:8080/applications/{applicationId}/entries
+https://localhost:8080/internal/applications/{applicationId}/entries
 ```
 
 ### PathVariable - applicationId
