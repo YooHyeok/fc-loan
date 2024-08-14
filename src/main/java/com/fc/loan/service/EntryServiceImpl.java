@@ -78,12 +78,16 @@ public class EntryServiceImpl implements EntryService {
                         .beforeEntryAmount(beforeEntryAmount)
                         .afterEntryAmount(request.getEntryAmount())
                         .build());
-        return UpdateResponse.builder()
+        /*return UpdateResponse.builder()
                 .applicationId(entry.getApplicationId())
                 .entryId(entryId)
                 .beforeEntryAmount(beforeEntryAmount)
                 .afterEntryAmount(request.getEntryAmount())
-                .build();
+                .build();*/
+        /* refactor */
+        UpdateResponse updateResponse = modelMapper.map(update, UpdateResponse.class);
+        updateResponse.setEntryId(entryId);
+        return updateResponse;
 
     }
 
