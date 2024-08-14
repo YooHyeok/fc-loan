@@ -30,4 +30,20 @@ public class EntryDTO implements Serializable {
         private LocalDateTime updatedAt;
 
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter
+    @Setter
+    public static class UpdateResponse {
+
+        private Long entryId;
+        private Long applicationId;
+        private BigDecimal beforeEntryAmount;
+        private BigDecimal afterEntryAmount;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+    }
 }
