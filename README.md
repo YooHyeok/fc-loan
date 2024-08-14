@@ -1428,3 +1428,45 @@ Long : 1
     }
 }
 ```
+
+## *대출 집행 수정 기능*
+구현 의도: 고객에게 돈이 전달되기 전 수행하는 방향으로 구현한다.  
+대출 집행 금액이 변경됨에 따라 밸런스의 값도 같이 수정되어야 할것이다.  
+집행 아이디를 기준으로 변경할 수 있도록 구현한다.
+생성할 때와 그 다음에 엔트리에 대한 수정을 할때에 대한 DTO는 각각 다를 수 있다.  
+예를 들어 어떤 금액으로 entryAmount를 수정할거야 라고 했을 때
+as-is(현재)의 entryAmount와  to-be(미래) entryAmount가 같이 비교가 된 상태로(비교할 수 있도록) Response DTO를 추가 구성한다.
+
+### URL(PUT)
+```text
+https://localhost:8080/applications/{applicationId}/entries
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Request - EntryDTO.Request
+```json
+{
+  "entryAmount": 5000000
+}
+```
+
+### Response - ResponseDTO<Response.EntryDTO>
+```json
+{
+    "result": {
+        "code": "0000",
+        "desc": "success"
+    },
+    "data": {
+      "entryId": 1,
+      "applicationId": 1,
+      "entryAmount": 5000000,
+      "createdAt": "2024-06-25T02:57:52.459969",
+      "updatedAt": "2024-06-25T02:57:52.459969"
+    }
+}
+```
