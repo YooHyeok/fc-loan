@@ -1439,7 +1439,7 @@ as-is(현재)의 entryAmount와  to-be(미래) entryAmount가 같이 비교가 �
 
 ### URL(PUT)
 ```text
-https://localhost:8080/internal/applications/{applicationId}/entries
+https://localhost:8080/internal/applications/{applicationId}
 ```
 
 ### PathVariable - applicationId
@@ -1468,5 +1468,31 @@ Long : 1
       "createdAt": "2024-06-25T02:57:52.459969",
       "updatedAt": "2024-06-25T02:57:52.459969"
     }
+}
+```
+
+## *대출 집행 삭제 기능*
+집행된 정보가 잘못 되어 있어 다시 검토하거나, 혹은 계약 체결 후 집행 전 취소 등  
+여러 이유로 인해 삭제 기능이 필요하다.  
+대출 집행에서 삭제 기능을 구현하면 Entry가 삭제되었을 때 Balance도 함께 0원으로 초기화 세팅하는 형식으로 진행한다.
+
+### URL(DELETE)
+```text
+https://localhost:8080/internal/applications/{applicationId}
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Response - ResponseDTO<Response.EntryDTO>
+```json
+{
+    "result": {
+        "code": "0000",
+        "desc": "success"
+    },
+    "data": null
 }
 ```
