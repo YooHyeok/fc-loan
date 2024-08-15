@@ -52,7 +52,7 @@ public class EntryServiceImpl implements EntryService {
 
     @Override
     public Response get(Long applicationId) {
-        Optional<Entry> entry = entryRepository.findByApplicationId();
+        Optional<Entry> entry = entryRepository.findByApplicationId(applicationId);
         /* 존재한다면 Response DTO로 변환후 반환 - 반대는 null*/
         if (entry.isPresent()) return modelMapper.map(entry, Response.class);
         return null;
@@ -89,6 +89,22 @@ public class EntryServiceImpl implements EntryService {
         updateResponse.setEntryId(entryId);
         return updateResponse;
 
+    }
+
+    @Override
+    public void delete(Long entryId) {
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        entry.setIsDeleted(true);
+        entryRepository.save(entry);
+
+        balanceService.update(entry.getApplicationId(),
+                BalanceDTO.UpdateRequest.builder()
+                        .applicationId(entry.getApplicationId())
+                        .beforeEntryAmount(entry.getEntryAmount())
+                        .afterEntryAmount(BigDecimal.ZERO)
+                        .build());
     }
 
     private boolean isContractedApplication(Long applicationId) {
