@@ -23,13 +23,24 @@ public class BalanceServiceImpl implements BalanceService {
     @Override
     public Response create(Long applicationId, Request request) {
         /* null 처리만 하고 반환하진 않는다. */
-        if (balanceRepository.findByApplicationId(applicationId).isPresent()) {
+        /*if (balanceRepository.findByApplicationId(applicationId).isPresent()) {
             throw new BaseException(ResultType.SYSTEM_ERROR);
-        }
+        }*/
 
         Balance balance = modelMapper.map(request, Balance.class);
         balance.setApplicationId(applicationId);
         balance.setBalance(request.getEntryAmount());
+
+        /**
+         * 대출 잔고가 존재할 경우 기존 null처리 후 SYSTEM_ERROR을 출력했던 방식에서
+         * 대출 집행 삭제 기능 추가 기능에 의해 기존 잔금을 덮어씌우는 방식으로 수정한다.
+         */
+        balanceRepository.findByApplicationId(applicationId).ifPresent(b -> {
+            balance.setBalanceId(b.getBalanceId());
+            balance.setIsDeleted(b.getIsDeleted());
+            balance.setCreatedAt(b.getCreatedAt());
+            balance.setUpdatedAt(b.getUpdatedAt());
+        });
 
         Balance saved = balanceRepository.save(balance);
         return modelMapper.map(saved, Response.class);
