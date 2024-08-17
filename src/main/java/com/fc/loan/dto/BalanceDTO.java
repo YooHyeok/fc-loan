@@ -26,6 +26,18 @@ public class BalanceDTO implements Serializable {
         private BigDecimal beforeEntryAmount; // 집행금액
         private BigDecimal afterEntryAmount; // 집행금액
     }
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class RepaymentRequest {
+        public enum RepaymentType {
+            ADD,
+            REMOVE
+        }
+        private BigDecimal repaymentAmount; // 상환 수정 금액
+        private RepaymentType type; // 수정 추가/삭제 타입
+    }
 
     @NoArgsConstructor
     @AllArgsConstructor
