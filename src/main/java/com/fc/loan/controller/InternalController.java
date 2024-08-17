@@ -1,7 +1,9 @@
 package com.fc.loan.controller;
 
+import com.fc.loan.dto.RepaymentDTO;
 import com.fc.loan.dto.ResponseDTO;
 import com.fc.loan.service.EntryService;
+import com.fc.loan.service.RepaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,7 @@ import static com.fc.loan.dto.EntryDTO.*;
 public class InternalController extends AbstractController{
 
     private final EntryService entryService;
+    private final RepaymentService repaymentService;
 
     @PostMapping("/{applicationId}/entries")
     public ResponseDTO<Response> create(@PathVariable Long applicationId, @RequestBody Request request) {
@@ -38,5 +41,10 @@ public class InternalController extends AbstractController{
     public ResponseDTO<Void> delete(@PathVariable Long entryId) {
         entryService.delete(entryId);
         return ok();
+    }
+
+    @PostMapping("/{applicationId}/repayments")
+    public ResponseDTO<RepaymentDTO.Response> create(@PathVariable Long applicationId, @RequestBody RepaymentDTO.Request request) {
+        return ok(repaymentService.create(applicationId, request));
     }
 }
