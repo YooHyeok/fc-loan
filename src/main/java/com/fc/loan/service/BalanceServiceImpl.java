@@ -65,4 +65,22 @@ public class BalanceServiceImpl implements BalanceService {
 
         return modelMapper.map(balanceRepository.save(balance), Response.class); // 수정-저장 후 DTO변환 및 반환
     }
+
+    @Override
+    public Response repaymentUpdate(Long applicationId, RepaymentRequest request) {
+        Balance balance = balanceRepository.findByApplicationId(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        BigDecimal updatedBalance = balance.getBalance(); // 잔여 대출 금액
+        BigDecimal repaymentAmout = request.getRepaymentAmount(); // 상환 금액
+        if (request.getType().equals(RepaymentRequest.RepaymentType.ADD)) {
+            updatedBalance.add(repaymentAmout);
+        } else {
+            updatedBalance.subtract(repaymentAmout);
+        }
+        balance.setBalance(updatedBalance);
+
+        return modelMapper.map(balanceRepository.save(balance), Response.class); // 수정-저장 후 DTO변환 및 반환
+    }
 }
