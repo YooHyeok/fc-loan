@@ -1350,7 +1350,7 @@ https://localhost:8080/applications/{applicationId}/contract
 Long : 1
 ```
 
-### Response - ResponseDTO<Response.ApplicationDTO>
+### Response - ResponseDTO<ApplicationDTO.Response>
 ```json
 {
     "result": {
@@ -1383,7 +1383,7 @@ Long : 1
 }
 ```
 
-### Response - ResponseDTO<Response.EntryDTO>
+### Response - ResponseDTO<EntryDTO.Response>
 ```json
 {
     "result": {
@@ -1412,7 +1412,7 @@ https://localhost:8080/internal/applications/{applicationId}/entries
 Long : 1
 ```
 
-### Response - ResponseDTO<Response.EntryDTO>
+### Response - ResponseDTO<EntryDTO.Response>
 ```json
 {
     "result": {
@@ -1454,7 +1454,7 @@ Long : 1
 }
 ```
 
-### Response - ResponseDTO<Response.EntryDTO>
+### Response - ResponseDTO<EntryDTO.Response>
 ```json
 {
     "result": {
@@ -1486,7 +1486,7 @@ https://localhost:8080/internal/applications/{applicationId}
 Long : 1
 ```
 
-### Response - ResponseDTO<Response.EntryDTO>
+### Response - ResponseDTO<EntryDTO.Response>
 ```json
 {
     "result": {
@@ -1546,3 +1546,40 @@ Long : 1
   }
 
   ```
+
+## *대출 상환 등록 기능*
+
+### URL(POST)
+```text
+https://localhost:8080/internal/applications/{applicationId}/repyments
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Request - RepaymentDTO.Request
+```json
+{
+  "repaymentAmount": 1000000
+}
+```
+
+### Response - ResponseDTO<RepaymentDTO.Response>
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": {
+    "repaymentId": 1,
+    "applicationId": 1,
+    "repaymentAmount": 1000000, // 1000000이 상환됨.
+    "balance": 4000000.00, // 상환 후 잔고
+    "createdAt": "2024-07-17T02:57:52.459969",
+    "updatedAt": "2024-06-17T02:57:52.459969"
+  }
+}
+```
