@@ -28,4 +28,16 @@ public class RepaymentDTO implements Serializable {
         private LocalDateTime updatedAt;
 
     }
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter
+    @Setter
+    public static class ListResponse {
+        private Long repaymentId;
+        private BigDecimal repaymentAmount; // 상환된 금액
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+    }
 }
