@@ -1583,3 +1583,39 @@ Long : 1
   }
 }
 ```
+
+## *대출 상환 조회 기능*
+
+### URL(POST)
+```text
+https://localhost:8080/internal/applications/{applicationId}/repyments
+```
+
+### PathVariable - applicationId
+```text
+Long : 1
+```
+
+### Response - ResponseDTO<List<RepaymentDTO.Response>>
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": [
+    {
+      "repaymentId": 1,
+      "repaymentAmount": 1000000.00, // 1000000이 상환됨.
+      "createdAt": "2024-07-18T02:57:52.459969",
+      "updatedAt": "2024-07-18T02:57:52.459969"
+    },
+    {
+      "repaymentId": 2,
+      "repaymentAmount": 1000000.00, // 1000000이 상환됨.
+      "createdAt": "2024-07-18T02:57:52.459969",
+      "updatedAt": "2024-07-18T02:57:52.459969"
+    }
+  ]
+}
+```
