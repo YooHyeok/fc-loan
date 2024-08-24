@@ -58,6 +58,41 @@ public class RepaymentServiceImpl implements RepaymentService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public UpdateResponse update(Long repaymentId, Request request) {
+        Repayment repayment = repaymentRepository.findById(repaymentId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        /* 상환(대출금 감소) 취소 - 기존 잔고에 기존 잘못 처리된 상환 금을 더한다. */
+        Long applicationId = repayment.getApplicationId();
+        balanceService.repaymentUpdate(applicationId,
+                BalanceDTO.RepaymentRequest.builder()
+                        .repaymentAmount(repayment.getRepaymentAmount())
+                        .type(BalanceDTO.RepaymentRequest.RepaymentType.ADD) // 상환(감소) 취소를 위해 기존 잔고에 잘못된 상환금을 더한다.
+                        .build()
+                );
+
+        /* 취소후 정상 상환요청금을 다시 세팅 */
+        repayment.setRepaymentAmount(request.getRepaymentAmount());
+        repaymentRepository.save(repayment);
+
+        /* 상환(대출금 증가) - 기존 잔고에 정상 상환금을 뺀다 */
+        BalanceDTO.Response updateBalance = balanceService.repaymentUpdate(applicationId,
+                BalanceDTO.RepaymentRequest.builder()
+                        .repaymentAmount(request.getRepaymentAmount())
+                        .type(BalanceDTO.RepaymentRequest.RepaymentType.REMOVE) // 상환(증가) 정상 상환금을 더한다.
+                        .build()
+        );
+        return UpdateResponse.builder()
+                .applicationId(applicationId)
+                .beforeRepaymentAmount(repayment.getRepaymentAmount())
+                .afterRepaymentAmount(request.getRepaymentAmount())
+                .balance(updateBalance.getBalance())
+                .createdAt(repayment.getCreatedAt())
+                .updatedAt(repayment.getUpdatedAt())
+                .build();
+    }
+
     private boolean isRepayableApplication(Long applicationId) {
         Optional<Application> existedApplication = applicationRepository.findById(applicationId);
         /* 신청 정보가 없는 경우 */
