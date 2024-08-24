@@ -249,7 +249,7 @@ https://localhost:8080/counsels
 }
 ```
 
-### Response - CounselDTO.Response
+### Response - ResponseDTO<CounselDTO.Response>
 ```json
 {
   "result": {
@@ -284,7 +284,7 @@ https://localhost:8080/counsels/{counselId}
 Long : 1
 ```
 
-### Response - CounselDTO.Response
+### Response - ResponseDTO<CounselDTO.Response>
 ```json
 {
   "result": {
@@ -332,7 +332,7 @@ Long : 1
 }
 ```
 
-### Response - CounselDTO.Response
+### Response - ResponseDTO<CounselDTO.Response>
 ```json
 {
   "result": {
@@ -367,7 +367,7 @@ https://localhost:8080/counsels/{counselId}
 Long : 1
 ```
 
-### Response - CounselDTO.Response
+### Response - ResponseDto<Void>
 ```json
 {
   "result": {
@@ -481,7 +481,7 @@ https://localhost:8080/applications
 }
 ```
 
-### Response - ApplicationDTO.Response
+### Response - ResponseDTO<ApplicationDTO.Response>
 ```json
 {
   "result": {
@@ -513,7 +513,7 @@ https://localhost:8080/applications/{applicationId}
 Long : 1
 ```
 
-### Response - ApplicationDTO.Response
+### Response - ResponseDTO<ApplicationDTO.Response>
 ```json
 {
   "result": {
@@ -555,7 +555,7 @@ Long : 1
 }
 ```
 
-### Response - ApplicationDTO.Response
+### Response - ResponseDTO<ApplicationDTO.Response>
 ```json
 {
   "result": {
@@ -587,7 +587,7 @@ https://localhost:8080/applications/{applicationId}
 Long : 1
 ```
 
-### Response - ApplicationDTO.Response
+### Response - ResponseDTO<Void>
 ```json
 {
   "result": {
@@ -663,7 +663,7 @@ https://localhost:8080/terms
 }
 ```
 
-### Response - TermsDTO.Response
+### Response - ResponseDTO<TermsDTO.Response>
 ```json
 {
   "result": {
@@ -687,7 +687,7 @@ https://localhost:8080/terms
 https://localhost:8080/terms
 ```
 
-### Response - TermsDTO.Response
+### Response - ResponseDTO<TermsDTO.Response>
 ```json
 {
   "result": {
@@ -798,7 +798,7 @@ Long : 1
 }
 ```
 
-### Response - Boolean
+### Response - ResponseDTO<Boolean>
 ```json
 {
     "result": {
@@ -833,7 +833,7 @@ Long : 1
 |-------|---------|
 | files | 2 files |
 
-### Response - Void
+### Response - ResponseDTO<Void>
 ```json
 {
     "result": {
@@ -1049,7 +1049,7 @@ https://localhost:8080/judgments
 }
 ```
 
-### Response - JudgmentDTO.Response
+### Response - ResponseDTO<JudgmentDTO.Response>
 ```json
 {
   "result": {
@@ -1079,7 +1079,7 @@ https://localhost:8080/judgments/{judgmentId}
 Long : 1
 ```
 
-### Response - JudgmentDTO.Response
+### Response - ResponseDTO<JudgmentDTO.Response>
 ```json
 {
   "result": {
@@ -1109,7 +1109,7 @@ https://localhost:8080/judgments/applications/{applicationId}
 Long : 1
 ```
 
-### Response - JudgmentDTO.Response
+### Response - ResponseDTO<JudgmentDTO.Response>
 ```json
 {
   "result": {
@@ -1148,7 +1148,7 @@ Long : 1
 }
 ```
 
-### Response - JudgmentDTO.Response
+### Response - ResponseDTO<JudgmentDTO.Response>
 ```json
 {
   "result": {
@@ -1178,7 +1178,7 @@ https://localhost:8080/judgments/{judgmentId}
 Long : 1
 ```
 
-### Response - JudgmentDTO.Response
+### Response - ResponseDTO<Void>
 ```json
 {
   "result": {
@@ -1206,7 +1206,7 @@ https://localhost:8080/judgments/{judgmentId}/grant
 Long : 1
 ```
 
-### Response - JudgmentDTO.Response
+### Response - ResponseDTO<JudgmentDTO.Response>
 ```json
 {
   "result": {
@@ -1486,7 +1486,7 @@ https://localhost:8080/internal/applications/{applicationId}
 Long : 1
 ```
 
-### Response - ResponseDTO<EntryDTO.Response>
+### Response - ResponseDTO<Void>
 ```json
 {
     "result": {
@@ -1585,8 +1585,9 @@ Long : 1
 ```
 
 ## *대출 상환 조회 기능*
-
-### URL(POST)
+등록 한 상환 정보가 잘못되었을 때 상환 데이터를 수정한다.   
+상환 정보에 대해 수정하는 행위이므로 그에 맞게 잔고(Balance)도 다시 조정한다.
+### URL(GET)
 ```text
 https://localhost:8080/internal/applications/{applicationId}/repyments
 ```
@@ -1613,6 +1614,45 @@ Long : 1
     {
       "repaymentId": 2,
       "repaymentAmount": 1000000.00, // 1000000이 상환됨.
+      "createdAt": "2024-07-18T02:57:52.459969",
+      "updatedAt": "2024-07-18T02:57:52.459969"
+    }
+  ]
+}
+```
+
+## *대출 상환 수정 기능*
+
+### URL(PUT)
+```text
+https://localhost:8080/internal/repyments/{repaymentId}
+```
+
+### PathVariable - repaymentId
+```text
+Long : 1
+```
+
+### Request - RepaymentDTO.Request
+```json
+{
+  "repaymentAmount": 2000000
+}
+```
+
+### Response - ResponseDTO<RepaymentDTO.Response>
+```json
+{
+  "result": {
+    "code": "0000",
+    "desc": "success"
+  },
+  "data": [
+    {
+      "repaymentId": 1,
+      "beforeRepaymentAmount": 1000000.00, // 이전 상환액 1000000이 상환 취소됨.
+      "updateRepaymentAmount": 2000000.00, // 2000000 으로 상환됨.
+      "balance": 3000000.00, // 잔고가 4000000 에서 3000000으로 수정됨.
       "createdAt": "2024-07-18T02:57:52.459969",
       "updatedAt": "2024-07-18T02:57:52.459969"
     }
