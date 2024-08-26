@@ -12,6 +12,52 @@
 ### Kubernetes, K8S 란?
  - 컨테이너들을 배포하고 관리해 주는 플랫폼을 말한다.
 
+# 구축 가이드
+
+<details>
+<summary>접기/펼치기</summary>
+
+
+## Docker
+ - [Docker Install Mac](https://docs.docker.com/desktop/install/mac-install/)
+ - [Docker Install Windows](https://docs.docker.com/desktop/install/windows-install/)
+
+위 링크에서 DockerDektop을 설치한다.  
+(Windows라면 가상환경을 위한 WSL이 선행 설치되어 있어야 한다.)
+
+## Kubernetes
+ - 도커 쿠버네티스 활성화   
+  Settings | Preferences (톱니바퀴) `>` Kubernetes `>` [x] Enable Kubernetes 체크  `>` [ Apply & restart ]  
+
+## Kuberctl
+쿠버네티스에 대한 컨트롤을 한다.
+- [Kuberctl Install Mac](https://kubernetes.io/ko/docs/tasks/tools/install-kubectl-macos/)
+- [Kuberctl Install Windows](https://kubernetes.io/ko/docs/tasks/tools/install-kubectl-windows/)
+
+  ### Windows Chocolatey 기준 설치 및 학인 명령  
+  (chocolatey가 선행 설치되어 있어야 한다.)
+   - Kuberctl 설치
+      ```bash
+      choco install kubernetes-cli
+      ```
+   - Kuberctl 버전 확인
+      ```bash
+      kubectl version --client
+      ```
+      ```text/plain
+      WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short.  Use --output=yaml|json to get the full version.
+      Client Version: version.Info{Major:"1", Minor:"27", GitVersion:"v1.27.2", GitCommit:"7f6f68fdabc4df88cfea2dcf9a19b2b830f1e647", GitTreeState:"clean", BuildDate:"2023-05-17T14:20:07Z", GoVersion:"go1.20.4", Compiler:"gc", Platform:"windows/amd64"}
+      Kustomize Version: v5.0.1
+      ```
+   - Kuberctl 서비스 조회
+      ```bash
+      kubectl get svc
+      ```
+      ```text/plain
+      NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+      kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5m23s
+      ```
+</details>
 </details>
 
 # *핀테크 및 대출 도메인 이해*
