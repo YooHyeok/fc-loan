@@ -58,6 +58,97 @@
       kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5m23s
       ```
 </details>
+
+## JIB를 통한 Docker Image 생성
+
+### JIB란?
+- Java 어플리케이션에 최적화 된 Docker 및 OCI 이미지를 빌드해주는 툴
+1. #### build.gradle에 plugin 추가
+    ```json
+    plugins {
+        id 'org.springframework.boot' version '2.7.1'
+        id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+        id 'com.google.cloud-tools.jib' version '3.2.0' // 플러그인 추가
+        id 'java'
+    }
+    /*생략*/
+    ```
+2. #### gradle refresh  
+   jib 태스크가 추가된 것 확인.
+
+
+3. #### build.gradle에 jib 정의  
+    - from: 어떠한 베이스 이미지를 기준으로 어플리케이션에 대한 이미지를 생성할 것인지
+    - to: 생성할 이미지
+    - container: 
+      - mainClass : 생성한 이미지 서버의 어플리케이션 클래스 패스 정의
+      - creationTime : 생성 시간에 대한 TimeStamp 설정
+      - format : 
+    ```json
+    /*생략*/
+    repositories {/*생략*/}
+    jib {
+        from {
+            image = 'openjdk:11-jre-slim'
+        }
+        to {
+            image = 'fc-loan'
+            tags = ['0.0.1']
+        }
+        container {
+            mainClass = 'com.fc.load.LoanApplication'
+            creationTime = 'USE_CURRENT_TIMESTAMP'
+            format = 'OCI'
+            volumes = ['/var/tmp']
+            entrypoint = [
+                'java',
+                'cp',
+                '/app/resources:/app/classes:/app/libs/*',
+                'com.fc.load.LoanApplication'
+            ]
+        }
+    }
+    /*생략*/
+    dependencies {/*생략*/}
+    ```
+4. #### H2DB Mysql로 수정
+    일반적으로 작성하듯 url에 localhost라고 작성한다면, docker에서는 docker내부의 localhost를 바라보게 되기 때문에  
+    `localhost` 대신 `host.docker.internal`을 사용한다.
+    ```yaml
+    spring:
+      datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://host.docker.internal:3306/load?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+        username: root
+        password: 1234
+    jpa:
+    # 생략
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: mysql
+    ```
+5. DB 접속 및 load database 생성
+   ```bash
+   mysql -uroot -p
+   ```
+   ```bash
+   show databases;
+   ```
+   ```bash
+   create database load;
+   ```
+   ```bash
+   show databases;
+   ```
+6. Gradle `>` Tasks `>` lib `>` jibDockerBuild 클릭
+7. docker image 확인
+    ```bash
+    docker images
+    ```
+8. docker image 실행
+    ```bash
+    docker run -ti fc-loan /bin/bash
+    ```
+ 
 </details>
 
 # *핀테크 및 대출 도메인 이해*
