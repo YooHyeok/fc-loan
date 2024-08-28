@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'com.google.cloud.tools.jib' version '3.2.0'
 	id 'java'
 }
 
@@ -18,6 +19,28 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+jib {
+	from {
+		image = 'openjdk:11-jre-slim'
+	}
+	to {
+		image = 'fc-loan'
+		tags = ['0.0.1']
+	}
+	container {
+		mainClass = 'com.fc.load.LoanApplication'
+		creationTime = 'USE_CURRENT_TIMESTAMP'
+		format = 'OCI'
+		volumes = ['/var/tmp']
+		entrypoint = [
+			'java',
+			'cp',
+			'/app/resources:/app/classes:/app/libs/*',
+			'com.fc.load.LoanApplication'
+		]
+	}
 }
 
 dependencies {
