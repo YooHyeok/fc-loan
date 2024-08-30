@@ -148,7 +148,79 @@
     ```bash
     docker run -ti fc-loan /bin/bash
     ```
- 
+
+## Skaffold를 통한 Kubernetes 배포
+### Skaffold란?
+코드 수정이 K8S에 반영되기 전까지의 과정을 자동화하여 단순화 해주는 프레임워크이다.  
+[Scaffold Link](https://skaffold.dev/) `>` Get Scaffold for CLI `>` Windows `>` 최 하단 Chocolatey
+
+### Chocolatey를 통한 scaffold 설치
+  ```bash
+  choco install -y skaffold
+  ```
+### skaffold 관련 yaml 설정 파일 정의
+Skaffold를 사용하기 위해서는 skaffold yaml 파일을 정의해 줘야 한다.  
+jib를 통해 생성한 Docker 이미지를 실행하는 설정을 정의한다.
+- 최상위디렉토리/skaffold.yml
+  ```yaml
+  apiVersion: skaffold/v4beta2
+  kind: Config
+  build:
+    artifacts:
+      - image: fc-loan
+        jib: {}
+  ```
+K8S에 배포하기 위해 K8S에 존재하는 여러가지 오브젝트들 중 deployment와 service 설정을 정의해야한다.  
+정의 해 놓은 설정 값들을 통해 Local K8S 환경에 Object(deployment, service 등)들이 생성된다.
+- 최상위디렉토리/k8s/deployment.yml
+  ```yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: fc-loan
+  spec:
+    selector:
+      matchLabels:
+        app: fc-loan
+      template:
+        metadata:
+          labels:
+            app: fc-loan
+        spec:
+          containers:
+            - name: fc-loan
+              image: fc-loan
+              ports:
+                - containerPort: 8080 
+                # Pod를 실행 할 때 어떤 스펙의 컨테이너를 실행할 지에 대해 설정을 진행하게 된다.
+                # Pod란 Kubernetes의 배포와 관리의 기본 단위이다. (자세한 내용은 chatGPT에게...)
+                # 서비스에 지정한 targetPort와 실제로 사용하는 컨테이너 포트를 일치시켜 줘야 매칭 될 수 있다.
+                # (이렇게 매칭 시켜줘야 컨테이너로 트래픽이 전달될 수 있다)
+  ```
+- 최상위디렉토리/k8s/service.yml
+  ```yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: fc-loan
+    namespace: default
+    labels:
+      app: fc-loan
+  spec:
+    selector:
+      app: fc-loan
+    ports:
+      - name: http
+        port: 8080
+        targetPort: 8080
+    type: LoadBalancer
+  ```
+### 이미지 빌드 및 쿠버네티스 환경에 배포
+  ```bash
+  skaffold dev
+  ```
+### Postman을 통한 테스트 진행하기
+로컬에서 서버를 띄우지 않은 상태로 localhost:8080 url 그대로 진행한다. 
 </details>
 
 # *핀테크 및 대출 도메인 이해*
